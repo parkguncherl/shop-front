@@ -1,0 +1,41 @@
+@charset "UTF-8";
+
+.layout {
+  min-width: 1300px;
+  position: relative;
+  background-color: var(--background-color);
+}
+.container {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  width: 100%;
+  min-height: calc(100vh - 50px);
+  box-sizing: border-box;
+}
+.content {
+  position: relative;
+  width: calc(100% - 600px);
+  padding: 30px;
+  box-sizing: border-box;
+  transition: .2s;
+  &::after {
+    content: "";
+    display: block;
+    width: 1px;
+    height: 94%;
+    position: absolute;
+    top: 50%;
+    left: -5px;
+    transform: translate(0, -50%);
+    background-color: #ddd;
+  }
+}
+
+
+//@media all and (max-width: 1000px){
+//  // 브라우저 width가 1000px보다 작아지는 순간부터 적용
+//  .container {
+//    padding-left: 200px;
+//  }
+//}

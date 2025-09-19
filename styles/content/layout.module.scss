@@ -1,0 +1,29 @@
+@charset "UTF-8";
+
+.layout {
+  display: flex;
+  position: relative;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 50px;
+  .dashboard_group {
+    .tit_box.h_btn {
+      margin-top: 0;
+    }
+  }
+}
+.l30 {
+  width: calc(30% - 25px);
+}
+.l40 {
+  width: calc(40% - 25px);
+}
+.l50 {
+  width: calc(50% - 25px);
+}
+.l60 {
+  width: calc(60% - 25px);
+}
+.l70 {
+  width: calc(70% - 25px);
+}

@@ -1,0 +1,73 @@
+.dropdown_wrapper {
+  width: 100%;
+  position: relative;
+  display: flex;
+  padding: 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: #fff;
+  font-size: 13px;
+  font-weight: 300;
+  color: #333;
+  .current {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    box-sizing: border-box;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 300;
+    color: #333;
+    span {
+      width: calc(100% - 12px);
+      overflow: hidden;
+      text-align: left;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+  .current::after {
+    content: "";
+    display: block;
+    width: 10px;
+    height: 10px;
+    background: url(../../public/ico/ico_select.svg) no-repeat center;
+    transition: 0.2s;
+  }
+}
+.opt_list {
+  width: 100%;
+  position: absolute;
+  padding: 5px;
+  display: none;
+  top: 30px;
+  left: 0;
+  overflow-y: auto;
+  border-radius: 5px;
+  background-color: #fff;
+  border: 1px solid #d4d4d4;
+  box-sizing: border-box;
+  z-index: 1;
+  li {
+    padding: 5px;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    &:hover {
+      background-color: #f9f9f9;
+    }
+  }
+  &.on {
+    display: block;
+    max-height: 200px;
+    height: auto; // 2022-03-22, 스크롤 및 높이 설정
+    overflowX: hidden; // 2022-03-22, 스크롤 및 높이 설정
+    overflowY: scroll; // 2022-03-22, 스크롤 및 높이 설정
+  }
+}

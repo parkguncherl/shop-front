@@ -1,0 +1,104 @@
+@charset "UTF-8";
+
+.orderBox {
+  width: 600px;
+  padding: 30px;
+  box-sizing: border-box;
+  & .searchBox {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    gap: 5px;
+    & > div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 5px;
+    }
+    & .inputArea {
+      & input {
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        padding: 6px 10px;
+        width: calc(100% - 120px);
+        height: 35px;
+        box-sizing: border-box;
+        outline: none;
+        &:hover,
+        &:focus {
+          border-color: var(--main-color);
+        }
+      }
+      & > div {
+        display: flex;
+        gap: 5px;
+        & button {
+          display: flex;
+          width: 35px;
+          height: 35px;
+          text-indent: -9999em;
+          background: #fff no-repeat center;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          cursor: pointer;
+          &.ico_receipt {background-image: url(../../public/images/ico_receipt_off.svg);}
+          &.ico_receipt.on {background: var(--main-color) url(../../public/images/ico_receipt_on.svg) no-repeat center; border: 1px solid var(--main-color);}
+          &.ico_print {background-image: url(../../public/images/ico_print.svg);}
+          &.ico_memo {background-image: url(../../public/images/ico_memo.svg);}
+        }
+
+      }
+    }
+    & .btnArea {
+      & button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        border: 1px solid #ddd;
+        width: 100px;
+        height: 35px;
+        border-radius: 5px;
+        background-color: #fff;
+        font-size: var(--s-size);
+        font-weight: 400;
+        color: #666;
+        cursor: pointer;
+        &::before {
+          content: "";
+          display: block;
+          width: 15px;
+          height: 15px;
+          background: url(../../public/images/ico_newBrowser.svg) no-repeat center;
+        }
+      }
+
+    }
+    & .etcArea {
+      justify-content: flex-start;
+      margin-bottom: 10px;
+      & span {
+        display: block;
+        width: 12px;
+        height: 15px;
+        background: url(../../public/images/ico_etc.svg) no-repeat center;
+      }
+      & em {
+        font-style: normal;
+        font-size: var(--s-size);
+        color: #666;
+      }
+    }
+  }
+  & .searchBox ~ div {
+    margin-bottom: 30px;
+  }
+}
+
+@media all and (max-width: 1000px){
+  // 브라우저 width가 1000px보다 작아지는 순간부터 적용
+
+}

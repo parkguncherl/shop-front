@@ -1,0 +1,8 @@
+<!-- 진회색 아이콘 ($, 굵게 & 원 5% 확대) -->
+<svg width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- 원 (반지름 5 → 5.25로 확대) -->
+    <circle cx="6.5" cy="6" r="5.25" stroke="#333333" stroke-width="0.8"/>
+    <!-- $ 기호 (굵게, 중앙 정렬) -->
+    <text x="6.5" y="6" text-anchor="middle" dominant-baseline="central"
+          font-size="7" font-weight="bold" font-family="Arial" fill="#333333">$</text>
+</svg>

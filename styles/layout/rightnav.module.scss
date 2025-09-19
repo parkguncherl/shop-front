@@ -1,0 +1,232 @@
+@charset "UTF-8";
+
+.nav {
+  position: fixed;
+  top: 80px;
+  right: -75px;
+  background-color: #fff;
+  width: 75px;
+  height: calc(100vh - 80px);
+  box-sizing: border-box;
+  border-radius: 10px;
+  z-index: 3;
+  transition: .2s;
+  & > ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
+    & > li { /* 1depth */
+      display: flex;
+      justify-content: center;
+      position: relative;
+      padding: 0 8px;
+      width: 100%;
+      box-sizing: border-box;
+      &:hover::after {
+        content: "";
+        display: flex;
+        position: absolute;
+        top: 10px;
+        left: -3px;
+        width: 3px;
+        height: 200%;
+      }
+      & > a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 59px;
+        box-sizing: inherit;
+        padding: 10px 4px;
+        border-radius: 5px;
+        transition: .2s;
+        & > span {
+          display: flex;
+          width: 30px;
+          height: 20px;
+          background: no-repeat center;
+          background-size: 18px auto;
+          &.ico_dashboard {background-image: url(../../public/images/ico_dashboard_off.svg); background-size: auto 21px;}
+          &.ico_system {background-image: url(../../public/images/ico_omsInfo_off.svg)}
+          &.ico_order {background-image: url(../../public/images/ico_omsInfo_off.svg)}
+          &.ico_omsInfo {background-image: url(../../public/images/ico_omsInfo_off.svg)}
+          &.ico_orderTran {background-image: url(../../public/images/ico_orderTran_off.svg)}
+          &.ico_orderMng {background-image: url(../../public/images/ico_orderMng_off.svg)}
+          &.ico_product {background-image: url(../../public/images/ico_product_off.svg); background-size: auto 19px;}
+          &.ico_factory {background-image: url(../../public/images/ico_factory_off.svg)}
+          &.ico_mobile {background-image: url(../../public/images/ico_moblie_off.svg)}
+          &.ico_sims {background-image: url(../../public/images/ico_sims_off.svg); background-size: auto 22px;}
+          &.ico_history {background-image: url(../../public/images/ico_history_off.svg); background-size: auto 22px;}
+          &.ico_mejang {background-image: url(../../public/images/ico_mejang_off.svg)}
+          &.ico_retail {background-image: url(../../public/images/ico_retail_off.svg)}
+          &.ico_data {background-image: url(../../public/images/ico_data_off.svg); background-size: auto 22px;}
+          &.ico_pastLog {background-image: url(../../public/images/ico_pastLog_off.svg); background-size: 23px auto;}
+        }
+        & > strong {
+          color: #999;
+          font-size: var(--m-size);
+          font-weight: 500;
+        }
+      }
+      &:hover > a {
+        background-color: var(--background-color);
+        & > span {
+          &.ico_dashboard {background-image: url(../../public/images/ico_dashboard_on.svg)}
+          &.ico_system {background-image: url(../../public/images/ico_omsInfo_on.svg)}
+          &.ico_order {background-image: url(../../public/images/ico_omsInfo_on.svg)}
+          &.ico_omsInfo {background-image: url(../../public/images/ico_omsInfo_on.svg)}
+          &.ico_orderTran {background-image: url(../../public/images/ico_orderTran_on.svg)}
+          &.ico_orderMng {background-image: url(../../public/images/ico_orderMng_on.svg)}
+          &.ico_product {background-image: url(../../public/images/ico_product_on.svg); background-size: auto 19px;}
+          &.ico_factory {background-image: url(../../public/images/ico_factory_on.svg)}
+          &.ico_mobile {background-image: url(../../public/images/ico_mobile_on.svg)}
+          &.ico_sims {background-image: url(../../public/images/ico_sims_on.svg); background-size: auto 22px;}
+          &.ico_history {background-image: url(../../public/images/ico_history_on.svg); background-size: auto 22px;}
+          &.ico_mejang {background-image: url(../../public/images/ico_mejang_on.svg)}
+          &.ico_retail {background-image: url(../../public/images/ico_retail_on.svg)}
+          &.ico_data {background-image: url(../../public/images/ico_data_on.svg)}
+          &.ico_pastLog {background-image: url(../../public/images/ico_pastLog_on.svg)}
+        }
+        & > strong {
+          color: var(--black-color);
+        }
+      }
+      & > ul { /* 2depth */
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 8px;
+        right: 78px;
+        width: 200px;
+        box-sizing: border-box;
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 23px 2px rgba(0, 0, 0, 0.2);
+        & li {
+          & a {
+            display: flex;
+            padding: 5px 10px;
+            font-size: var(--m-size);
+            font-weight: 400;
+            color: #999;
+            transition: .2s;
+            border-radius: 5px;
+          }
+          &:hover a {
+            background-color: var(--background-color);
+            color: var(--black-color);
+            font-weight: 500;
+          }
+        }
+
+        /* 스크롤바 전체 스타일링 */
+        &::-webkit-scrollbar {
+          width: 8px;
+        }
+        &::-webkit-scrollbar {
+          height: 8px;
+        }
+        /* 스크롤바 track 스타일링 (배경) */
+        &::-webkit-scrollbar-track,
+        .ag-body-vertical-scroll-viewport::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+        /* 스크롤바 thumb 스타일링 (드래그 가능한 부분) */
+        &::-webkit-scrollbar-thumb,
+        &::-webkit-scrollbar-thumb {
+          background: #888;
+          border-radius: 10px;
+        }
+        /* 스크롤바 thumb 반경 설정 */
+        &::-webkit-scrollbar-thumb:hover,
+        &::-webkit-scrollbar-thumb:hover {
+          background: #555;
+        }
+      }
+      &:hover > ul{
+        display: flex;
+      }
+      &:nth-child(7) > ul,
+      &:nth-child(8) > ul {
+        top: inherit;
+        bottom: 0;
+      }
+    }
+  }
+  & > button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 10px;
+    left: -23px;
+    width: 24px;
+    height: 113px;
+    background: url(../../public/images/img_menuBtnBg.svg) no-repeat center;
+    text-indent: -9999em;
+    cursor: pointer;
+    &::after {
+      content: "";
+      display: flex;
+      width: 9px;
+      height: 14px;
+      background: url(../../public/images/ico_menuBtnLeftArrow.svg) no-repeat center;
+    }
+  }
+  &.on > button {
+    &::after {
+      background: url(../../public/images/ico_menuBtnRightArrow.svg) no-repeat center;
+    }
+  }
+  &.on {
+    right: 10px;
+  }
+  /*.ico_sticker {
+    position: fixed;
+    bottom: 30px;
+    transform: translateX(0%);
+    width: 50px;
+    height: 50px;
+    //background: url(../../public/images/ico_omsInfo_on.svg) no-repeat center;
+    &.active {
+      color: #333333;
+    }
+  }*/
+  .ico_sticker {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #999;
+    text-decoration: none;
+    transition: all 0.3s ease;
+
+    &::before {
+      content: 'M';
+      font-family: 'Arial', sans-serif;
+    }
+
+    &.active {
+      background-color: #4a90e2;
+      color: #ffffff;
+    }
+  }
+  .sticker_item {
+    position: absolute;
+    bottom: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+}
+@media all and (max-width: 1000px){
+
+}
