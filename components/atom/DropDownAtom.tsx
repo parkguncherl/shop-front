@@ -141,7 +141,7 @@ const DropDownAtom = forwardRef(function DropDownAtom(
               return (
                 <Select.Option key={o.key + index + o.value} value={o.value} name={name} defaultValue={o.defaultValue}>
                   {/*{o.label}*/}
-                  {o.label?.includes('binblurNewSeller') ? (
+                  {o.label?.includes('shopNewSeller') ? (
                     <>
                       {o.label.split('binblurNewSeller')[0]} <span>신규</span>
                     </>

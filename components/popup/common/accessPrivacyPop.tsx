@@ -287,7 +287,7 @@ const AccessPrivacyPop = ({ privacyType }: { privacyType: string | null }) => {
                   <StyledList>
                     <StyledListItem>• 이 름: 송아름</StyledListItem>
                     <StyledListItem>• 전 화: 02-2232-5129</StyledListItem>
-                    <StyledListItem>• E-Mail: contact@binblur.com</StyledListItem>
+                    <StyledListItem>• E-Mail: contact@shop.com</StyledListItem>
                   </StyledList>
                 </ContentSection>
 
@@ -529,7 +529,7 @@ const AccessPrivacyPop = ({ privacyType }: { privacyType: string | null }) => {
                       의미합니다.
                     </StyledListItem>
                     <StyledListItem>• ‘반출’ : 불량 상품을 공장으로 보내는 경우를 의미합니다.</StyledListItem>
-                    <StyledListItem>• ‘사이트’ : 빈블러(sims.binblur.co.kr)의 홈페이지를 의미합니다.</StyledListItem>
+                    <StyledListItem>• ‘사이트’ : 빈블러(sims.shop.co.kr)의 홈페이지를 의미합니다.</StyledListItem>
                   </StyledList>
                   <SubSectionTitle level={4}>제3조 약관의 명시와 설명 및 개정</SubSectionTitle>
                   <Paragraph>
@@ -725,7 +725,7 @@ const AccessPrivacyPop = ({ privacyType }: { privacyType: string | null }) => {
                       의미합니다.
                     </StyledListItem>
                     <StyledListItem>• ‘반출’ : 불량 상품을 공장으로 보내는 경우를 의미합니다.</StyledListItem>
-                    <StyledListItem>• ‘사이트’ : 빈블러(sims.binblur.co.kr)의 홈페이지를 의미합니다.</StyledListItem>
+                    <StyledListItem>• ‘사이트’ : 빈블러(sims.shop.co.kr)의 홈페이지를 의미합니다.</StyledListItem>
                   </StyledList>
                   <SubSectionTitle level={4}>제3조 약관의 명시와 설명 및 개정</SubSectionTitle>
                   <Paragraph>

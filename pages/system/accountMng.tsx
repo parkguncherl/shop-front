@@ -1,4 +1,4 @@
-//C:\work\binblur-oms-frontend\pages\system\accountMng.tsx
+//C:\work\shop-frontend\pages\system\accountMng.tsx
 
 import React, { useEffect, useState } from 'react';
 import { Search, Table, Title } from '../../components';

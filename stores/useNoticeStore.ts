@@ -1,4 +1,4 @@
-// C:\work\binblur-oms-frontend\stores\useNoticeStore.ts
+// C:\work\shop-frontend\stores\useNoticeStore.ts
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';

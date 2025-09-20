@@ -1,4 +1,4 @@
-// C:\work\binblur-oms-frontend\components\popup\system\accountMng\AccountModPop.tsx
+// C:\work\shop-frontend\components\popup\system\accountMng\AccountModPop.tsx
 
 import {
   PartnerResponseSelect,

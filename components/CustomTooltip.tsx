@@ -1,4 +1,4 @@
-// C:\work\binblur-oms-frontend\components\CustomTooltip.tsx
+// C:\work\shop-frontend\components\CustomTooltip.tsx
 
 import { ITooltipParams } from 'ag-grid-community';
 

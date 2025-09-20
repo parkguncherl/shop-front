@@ -50,8 +50,8 @@ export const DEFAULT_ADD_HOURE = 6;
 
 const telRegionNos = ['010', '02', '031', '032', '033', '041', '042', '043', '044', '051', '052', '053', '054', '055', '061', '062', '063', '064'];
 
-export const LOCAL_STORAGE_HISTORY = 'binblurMenuHistoryList';
-export const LOCAL_STORAGE_GUBUN = 'binblurGubun';
+export const LOCAL_STORAGE_HISTORY = 'shopMenuHistoryList';
+export const LOCAL_STORAGE_GUBUN = 'shopGubun';
 export const LOCAL_STORAGE_WMS_HISTORY = 'binblurWmsMenuHistoryList';
 
 export const PARTNER_CODE = { expense: 'P0001', categories: 'P0002', boryuCategories: 'P0003' };

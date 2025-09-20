@@ -1,4 +1,4 @@
-# binblur-frontend
+# shop-frontend
 빈블러 주문관리 시스템(프론트)
 
 - version

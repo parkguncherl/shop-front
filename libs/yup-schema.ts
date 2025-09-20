@@ -1,4 +1,4 @@
-// C:\work\binblur-oms-frontend\libs\yup-schema.ts
+// C:\work\shop-frontend\libs\yup-schema.ts
 
 import * as yup from 'yup';
 import { LoginVerificationFields } from '../pages/login';

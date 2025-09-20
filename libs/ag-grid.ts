@@ -1,4 +1,4 @@
-// C:\work\binblur-oms-frontend\libs\ag-grid.ts
+// C:\work\shop-frontend\libs\ag-grid.ts
 
 import { ColDef, SuppressKeyboardEventParams } from 'ag-grid-community';
 import CustomTooltip from '../components/CustomTooltip';
