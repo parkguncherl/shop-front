@@ -1,0 +1,129 @@
+@charset "UTF-8";
+/* ============================================================
+    파일정의 : reset.scss
+============================================================ */
+
+:root {
+  /* color */
+  --main-color: #0070C0;
+  --black-color: #333;
+  --red-color: #D12E2E;
+  --blue-color: #0091ff;
+  --hover-color: #8bcfff;
+  --focus-color: #0091ff;
+  --background-color: #f2f4f6;
+  --background-hover-color: #d1d6db;
+  /* font size */
+  --xs-size: 0.75rem; /* 12px */
+  --s-size: 0.813rem; /* 13px */
+  --m-size: 0.875rem; /* 14px */
+  --l-size: 0.938rem; /* 15px */
+  --xl-size: 1rem; /* 16px */
+
+  /* Ag-Grid Colors */
+  --ag-grid-peach: #FFCECE;
+  --ag-grid-apricot: #FFE4BC;
+  --ag-grid-lightGreen: #BCEDBB;
+  --ag-grid-lightGray: #DFDFDF;
+  --ag-grid-lightYellow: #FEFFCE;
+  --ag-grid-lightPink: #F2CEFF;
+  --ag-grid-lightBlue: #CEDFFF;
+  --ag-grid-lightViolet: #ebdeff;
+  --ag-grid-lightSkyblue: #e0f3ff;
+  --ag-grid-lightGreen2: #CEFFF9;
+
+  --ag-grid-focus-peach: #ffbfbf;
+  --ag-grid-focus-apricot: #ffd985;
+  --ag-grid-focus-lightGreen: #bdffbb;
+  --ag-grid-focus-lightGray: #c8c8c8;
+  --ag-grid-focus-lightYellow: #fff7a5;
+  --ag-grid-focus-lightPink: #ffb1f2;
+  --ag-grid-focus-lightBlue: #82abfd;
+  --ag-grid-focus-lightViolet: #dac7ff;
+  --ag-grid-focus-lightSkyblue: #b4e3ff;
+  --ag-grid-focus-lightGreen2: #a9fff3;
+}
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video, input, select, button, textarea {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: 'NotoSansKR', sans-serif;
+  font-weight: 200;
+  vertical-align: baseline;
+  letter-spacing: -.5px;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+a {
+  color: #333;
+  text-decoration: none;
+}
+ol, ul, dl, dt, dd, li {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-spacing: 0;
+}
+table caption {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+button, input, optgroup, select, textarea {
+  font-size: 14px;
+}
+
+/* NotoSansKR 웹폰트 */
+@font-face {
+  font-family: "NotoSansKR";
+  src: url("../public/fonts/NotoSans-Thin.woff");
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: "NotoSansKR";
+  src: url("../public/fonts/NotoSans-Light.woff");
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: "NotoSansKR";
+  src: url("../public/fonts/NotoSans-DemiLight.woff");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "NotoSansKR";
+  src: url("../public/fonts/NotoSans-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "NotoSansKR";
+  src: url("../public/fonts/NotoSans-Medium.woff");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "NotoSansKR";
+  src: url("../public/fonts/NotoSans-Bold.woff");
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "NotoSansKR";
+  src: url("../public/fonts/NotoSans-Black.woff");
+  font-weight: 700;
+  font-style: normal;
+}

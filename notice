@@ -1,0 +1,11 @@
+# 로컬 브랜치를 원격 브랜치와 동일하게 설정
+git fetch origin
+git reset --hard origin
+git pull
+
+
+로그실행
+nohup npm run openapi:prod > /home/binblurdev/binblur-backend/logs/openapi-prod.log 2>&1 &
+
+로그출력
+tail -f /home/binblurdev/binblur-backend/logs/openapi-prod.log

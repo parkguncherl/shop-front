@@ -1,0 +1,15 @@
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Mobile body -->
+    <rect x="6" y="2" width="12" height="20" rx="2" stroke="#333333" stroke-width="2" fill="none"/>
+
+    <!-- Speaker (top) -->
+    <rect x="10" y="3.2" width="4" height="0.6" rx="0.3" fill="#333333"/>
+
+    <!-- Home button (bottom) -->
+    <circle cx="12" cy="19" r="0.8" fill="#333333"/>
+
+    <!-- UI lines inside screen -->
+    <rect x="8" y="7" width="8" height="1.2" rx="0.6" fill="#333333"/>
+    <rect x="8" y="10" width="8" height="1.2" rx="0.6" fill="#333333"/>
+    <rect x="8" y="13" width="8" height="1.2" rx="0.6" fill="#333333"/>
+</svg>

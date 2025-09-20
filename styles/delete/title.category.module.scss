@@ -1,0 +1,28 @@
+.container {
+  min-width: 255px;
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  margin-left: 5px;
+  .label_wrapper {
+    width: 60px;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    span.text {
+      margin-right: 10px;
+      padding-bottom: 0.1px;
+      border-bottom-style: solid;
+      border-bottom-width: 2px;
+      width: fit-content;
+      font-weight: 400;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    span.arrow {
+      cursor: default;
+    }
+  }
+}
+

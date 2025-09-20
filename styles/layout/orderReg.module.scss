@@ -1,0 +1,296 @@
+@charset "UTF-8";
+
+.orderBox {
+  width: 600px;
+  padding: 30px;
+  box-sizing: border-box;
+  position: sticky;
+  transition: .2s;
+  & > div {
+    position: sticky;
+    top: 80px;
+  }
+  & h3 {
+    justify-content: flex-start;
+    gap: 20px;
+    .etcArea {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      justify-content: flex-start;
+      width: calc(100% - 92px);
+      & span {
+        display: block;
+        width: 12px;
+        height: 15px;
+        background: url(../../public/images/ico_etc.svg) no-repeat center;
+      }
+      & em {
+        font-style: normal;
+        font-size: var(--s-size);
+        color: #666;
+      }
+    }
+  }
+
+  & .searchBox {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    gap: 10px;
+    & > div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    & .inputArea {
+      position: relative;
+      & .ico_search {
+        display: flex;
+        position: absolute;
+        top: 9px;
+        left: 10px;
+        width: 20px;
+        height: 20px;
+        background: url(../../public/images/ico_search_gray.svg) no-repeat center;
+        background-size: 75% auto;
+        text-indent: -9999em;
+        z-index: 10;
+      }
+      & > div:first-child {
+        display: flex;
+        position: relative;
+        width: calc(100% - 120px);
+        height: 37px;
+        border-radius: 5px;
+        box-sizing: border-box;
+        & > span {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: #fff;
+          padding: 0;
+          border: 2px solid transparent;
+          border-radius: 5px;
+          z-index: 2;
+          &:hover {
+            border-color: var(--hover-color);
+          }
+          & input {
+            display: flex;
+            padding: 4px 30px 4px 35px;
+          }
+          & > span {
+            display: flex;
+            position: absolute;
+            top: 45%;
+            right: 8px;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            & > span {
+              width: 100%;
+              height: 100%;
+              & > span {
+                width: 100%;
+                height: 100%;
+                & svg {
+                  width: 100%;
+                  height: 100%;
+                }
+              }
+            }
+          }
+        }
+        //& input {
+        //  position: absolute;
+        //  top: 0;
+        //  left: 0;
+        //  width: 100%;
+        //  background-color: transparent;
+        //  border-radius: 5px;
+        //  border: 2px solid transparent;
+        //  box-sizing: border-box;
+        //  padding: 6px 10px 6px 35px;
+        //  height: 35px;
+        //  outline: none;
+        //  font-weight: 200;
+        //  z-index: 2;
+        //  transition: .2s;
+        //  &:hover {
+        //    border: 2px solid #8bcfff;
+        //  }
+        //  &:focus {
+        //    border: 2px solid #0091ff;
+        //  }
+        //  &::placeholder {
+        //    font-weight: 300;
+        //  }
+        //}
+        &::after {
+          content: "";
+          display: block;
+          width: calc(100% - 20px);
+          height: calc(100% - 14px);
+          position: absolute;
+          top: 7px;
+          left: 10px;
+          background: #fff;
+          z-index: 1;
+        }
+      }
+      & > div {
+        display: flex;
+        gap: 10px;
+        & button {
+          display: flex;
+          width: 35px;
+          height: 35px;
+          text-indent: -9999em;
+          background: #fff no-repeat center;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: .2s;
+          &.ico_receipt {background-image: url(../../public/images/ico_receipt_off.svg);}
+          &.ico_receipt.on {background: var(--main-color) url(../../public/images/ico_receipt_on.svg) no-repeat center; border: 1px solid var(--main-color);}
+          &.ico_print {background-image: url(../../public/images/ico_print.svg);}
+          &.ico_memo {background-image: url(../../public/images/ico_memo.svg);}
+          &:active {
+            transform: scale(.9);
+          }
+        }
+      }
+    }
+    & .btnArea {
+      & button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        width: 100px;
+        height: 35px;
+        border-radius: 5px;
+        background-color: var(--background-color);
+        font-size: var(--s-size);
+        font-weight: 400;
+        color: #666;
+        cursor: pointer;
+        transition: .2s;
+        //&::before { 20241107 새창버튼 아이콘 삭제
+        //  content: "";
+        //  display: block;
+        //  width: 15px;
+        //  height: 15px;
+        //  background: url(../../public/images/ico_newBrowser.svg) no-repeat center;
+        //}
+        &:hover {
+          background-color: var(--background-hover-color);
+        }
+        &:active {
+          transform: scale(.9);
+        }
+      }
+
+    }
+
+  }
+  & .searchBox ~ div {
+    margin-bottom: 15px;
+  }
+  & .summaryBox {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    & .payBox {
+      width: calc(50% - 10px);
+      & h4 {
+        font-size: var(--m-size);
+        height: auto;
+        margin-left: 10px;
+      }
+      & .payContentBox {
+        display: flex;
+      }
+      & > div {
+        margin-bottom: 5px;
+      }
+    }
+    & .payContentBox,
+    & .todayContentBox { // 결제상세,당일상세 div
+      flex-direction: column;
+      background-color: #fff;
+      padding: 12px 23px;
+      box-sizing: border-box;
+      border-radius: 10px;
+      gap: 2px;
+      & li {
+        display: flex;
+        justify-content: space-between;
+        & strong {
+          font-size: var(--s-size);
+          font-weight: 200;
+        }
+        & span {
+          font-size: var(--s-size);
+        }
+      }
+    }
+    & .todayBox {
+      width: calc(50% - 10px);
+      & > div {
+        display: flex;
+        margin-bottom: 5px;
+        gap: 10px;
+        & h4 {
+          display: flex;
+          &:first-child {
+            margin-left: 10px;
+          }
+        }
+        & button {
+          background-color: transparent;
+          font-size: var(--m-size);
+          font-weight: 500;
+          color: #999;
+          cursor: pointer;
+
+          &.on {
+            color: #333;
+          }
+        }
+      }
+      & .todayBoxDiv {
+        flex-direction: column;
+        & .todayContentBox {
+          display: none;
+          &.on {
+            display: flex;
+          }
+        }
+      }
+    }
+  }
+
+}
+@media all and (max-width: 1000px){
+  // 브라우저 width가 1000px보다 작아지는 순간부터 적용
+
+}
+@keyframes btnAnimation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

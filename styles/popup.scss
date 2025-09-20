@@ -1,0 +1,99 @@
+@charset "UTF-8";
+/*******************************
+  popup.scss
+  팝업 css
+********************************/
+
+.popUpGroup {
+  padding: 0;
+  & .ant-modal-content {
+    padding: 0 50px 40px 50px;
+    margin: 20px;
+  }
+  & .ant-modal-close {
+    display: none;
+    top: 18px;
+    right: 20px;
+    transition: .2s;
+    &:hover {
+      background-color: #fff;
+      & .ant-modal-close-icon {
+        &::after {
+          background: url(../public/images/ico_close_on.svg) no-repeat center
+        }
+      }
+    }
+    &:active {
+      background-color: #fff;
+      transform: scale(.9);
+    }
+  }
+  & .ant-modal-close-icon {
+    &::after {
+      content: "";
+      display: block;
+      width: 15.12px;
+      height: 15.12px;
+      background: url(../public/images/ico_close_off.svg) no-repeat center;
+    }
+    & svg {
+      display: none;
+    }
+  }
+  &.SkuSearchPop {
+    & .ant-modal-close { // 상품검색 X버튼
+      display: block;
+    }
+  }
+  & .ant-modal-header {
+    padding: 40px 0 15px;
+    margin: 0;
+    & .popupHeader {
+      cursor: grab;
+      &:active {
+        cursor: grabbing;
+      }
+      h3 {
+        font-size: 18px;
+        color: #333;
+        font-weight: 500;
+        & .instockTitle {
+          color: #333;
+          font-weight: 300;
+          & .partnerNm {
+            color: var(--main-color);
+            font-weight: 500;
+          }
+          & .title {
+            font-weight: 600;
+          }
+        }
+      }
+      //padding-bottom: 20px;
+      //border-bottom: 1px solid #333;
+    }
+  }
+
+  & .popBody {
+    & .popupContent {
+      & .tblBox {
+        margin-bottom: 20px;
+        &.payment {
+          & input.half {
+            width: 50%;
+          }
+        }
+      }
+      & .searchBox {
+        background-color: #f5f5f5;
+      }
+    }
+  }
+
+  .popupFooter {
+    .btn {
+      padding: 0 20px;
+      height: 35px;
+    }
+  }
+}
