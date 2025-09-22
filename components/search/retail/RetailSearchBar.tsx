@@ -56,11 +56,11 @@ export const RetailSearchBar = forwardRef<retailSearchBarRefInterface, Props>(
 
     /** 소매처 드롭다운에서 값을 선택할 시 작동(데이터를 찾을 수 없을 시 value == undefined) */
     const onDataSelected = ({ nameArg = name, retailInfoResponse }: { nameArg?: string; retailInfoResponse: RetailResponseDetail | undefined }) => {
-      if (retailInfoResponse == undefined || (retailInfoResponse.sellerNm && String(retailInfoResponse.sellerNm).indexOf('binblurNewSeller') > -1)) {
+      if (retailInfoResponse == undefined || (retailInfoResponse.sellerNm && String(retailInfoResponse.sellerNm).indexOf('shopNewSeller') > -1)) {
         // 응답값이 undefined(검색된 데이터 없음) 이거나 응답(소매처명)이 특정 조건을 만족하는 경우(신규 소매처 식별자) 동작
         setModalType('CONFIRM_REGISTER');
         if (retailInfoResponse?.sellerNm) {
-          return retailInfoResponse.sellerNm.replace('binblurNewSeller', ''); // 식별자 'binblurNewSeller' 제거
+          return retailInfoResponse.sellerNm.replace('shopNewSeller', ''); // 식별자 'shopNewSeller' 제거
         }
       } else {
         onRetailSelected(retailInfoResponse);

@@ -20,8 +20,8 @@ module.exports = {
       user: "shopdev",
       host: "15.164.66.87",
       ref: "origin/main",
-      repo: "git@github.com:BinblurIT/shop-oms-frontend.git",
-      path: "/home/shopdev/shop-oms-frontend",
+      repo: "git@github.com:parkguncherl/shop-oms-frontend.git",
+      path: "/home/shopdev/shop-frontend",
       "post-deploy": "npm install && npm run build && pm2 restart shopfront.config.js"
     }
   }

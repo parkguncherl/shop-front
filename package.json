@@ -11,9 +11,9 @@
     "build:prod": "env-cmd -f .env.production next build",
     "start:prod": "env-cmd -f .env.production next start",
     "lint": "next lint",
-    "openapi:local": "openapi-generator-cli generate --reserved-words-mappings delete=delete -g typescript-axios -i http://localhost:8080/binblur-ap/v3/api-docs/smart -o ./generated -c ./openapi.json --skip-validate-spec",
-    "openapi:dev": "openapi-generator-cli generate --reserved-words-mappings delete=delete -g typescript-axios -i http://172.31.10.108:8080/binblur-ap/v3/api-docs/smart -o ./generated -c ./openapi.json --skip-validate-spec",
-    "openapi:prod": "openapi-generator-cli generate --reserved-words-mappings delete=delete -g typescript-axios -i http://172.31.10.108:8080/binblur-ap/v3/api-docs/smart -o ./generated -c ./openapi.json --skip-validate-spec",
+    "openapi:local": "openapi-generator-cli generate --reserved-words-mappings delete=delete -g typescript-axios -i http://localhost:8080/shop-ap/v3/api-docs/smart -o ./generated -c ./openapi.json --skip-validate-spec",
+    "openapi:dev": "openapi-generator-cli generate --reserved-words-mappings delete=delete -g typescript-axios -i http://172.31.10.108:8080/shop-ap/v3/api-docs/smart -o ./generated -c ./openapi.json --skip-validate-spec",
+    "openapi:prod": "openapi-generator-cli generate --reserved-words-mappings delete=delete -g typescript-axios -i http://172.31.10.108:8080/shop-ap/v3/api-docs/smart -o ./generated -c ./openapi.json --skip-validate-spec",
     "release": "yarn install; yarn openapi:dev; yarn build:wdev; yarn dev"
   },
   "dependencies": {

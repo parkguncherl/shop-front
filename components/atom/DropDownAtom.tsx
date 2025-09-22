@@ -143,7 +143,7 @@ const DropDownAtom = forwardRef(function DropDownAtom(
                   {/*{o.label}*/}
                   {o.label?.includes('shopNewSeller') ? (
                     <>
-                      {o.label.split('binblurNewSeller')[0]} <span>신규</span>
+                      {o.label.split('shopNewSeller')[0]} <span>신규</span>
                     </>
                   ) : (
                     o.label

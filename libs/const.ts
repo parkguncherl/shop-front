@@ -52,7 +52,7 @@ const telRegionNos = ['010', '02', '031', '032', '033', '041', '042', '043', '04
 
 export const LOCAL_STORAGE_HISTORY = 'shopMenuHistoryList';
 export const LOCAL_STORAGE_GUBUN = 'shopGubun';
-export const LOCAL_STORAGE_WMS_HISTORY = 'binblurWmsMenuHistoryList';
+export const LOCAL_STORAGE_WMS_HISTORY = 'shopWmsMenuHistoryList';
 
 export const PARTNER_CODE = { expense: 'P0001', categories: 'P0002', boryuCategories: 'P0003' };
 export const CODE = { todayColor: '10310', logis: '10090', asnStatCd: '10370' };

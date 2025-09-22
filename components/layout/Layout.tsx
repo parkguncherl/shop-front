@@ -135,7 +135,7 @@ export const Layout = ({ children }: Props) => {
         {session.status === 'authenticated' && !isLoading && (
           <div className={`omsLayout ${styles.layout} ${isOrderOn ? 'isOrderOn' : ''}`}>
             <Head>
-              <title>BINBLUR OMS</title>
+              <title>GGUANGGU</title>
             </Head>
             <Header
               closed={closed}
@@ -175,7 +175,7 @@ export const Layout = ({ children }: Props) => {
         {session.status === 'authenticated' && !isLoading && (
           <div>
             <Head>
-              <title>BINBLUR MOBILE</title>
+              <title>GGUANGGU MOBILE</title>
             </Head>
             <HeaderDesignMobile closed={closed} toggle={() => setClosed(!closed)} />
             <div>
@@ -192,7 +192,7 @@ export const Layout = ({ children }: Props) => {
         {session.status === 'authenticated' && !isLoading && (
           <div className={`wmsLayout ${styles.layout}`}>
             <Head>
-              <title>BINBLUR WMS</title>
+              <title>GGUANGGU ADMIN</title>
             </Head>
             <HeaderWms closed={closed} toggle={() => setClosed(!closed)} />
             <div className={`container ${styles.container} ${closed ? styles.on : ''}`}>

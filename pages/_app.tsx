@@ -91,7 +91,7 @@ const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
   return (
     <ErrorBoundary fallback={<Error statusCode={500} />} onError={async (e) => await ErrorMessage(e.stack)}>
       <Head>
-        <title>BINBLUR</title>
+        <title>GGUANGGU</title>
       </Head>
       <ConfigProvider
         locale={ko}
