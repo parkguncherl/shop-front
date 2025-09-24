@@ -6,7 +6,6 @@ import styles from '../../styles/layout/rightnav.module.scss';
 import classNames from 'classnames/bind';
 import { useQuery } from '@tanstack/react-query';
 import { ApiResponseListLeftMenu } from '../../generated';
-import StickerPopup from '../../components/popup/sticker/StickePop';
 
 const cx = classNames.bind(styles);
 
@@ -141,25 +140,11 @@ export const RightNav = ({ onClick }: Props) => {
   // 메뉴 데이터 가져오기
   const { data: menus, isFetching } = useQuery(['/menu/leftMenu'], () => authApi.get<ApiResponseListLeftMenu>('/menu/leftMenu'));
 
-  // 스티커 팝업 상태 관리
-  const [showSticker, setShowSticker] = useState(false);
-
   // 네비게이션 토글 함수
   const toggleNav = () => {
     const newState = !isNavOn;
     setIsNavOn(newState);
     localStorage.setItem('isNavOn', newState.toString());
-  };
-
-  // 스티커 팝업 토글 함수
-  const toggleSticker = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setShowSticker((prev) => !prev);
-  };
-
-  // 스티커 팝업 닫기 함수
-  const handleCloseSticker = () => {
-    setShowSticker(false);
   };
 
   // 영역 외 클릭시 네비게이션 닫기
@@ -193,15 +178,9 @@ export const RightNav = ({ onClick }: Props) => {
           </li>
           {menus && menus.data?.body?.map((item, key) => <MenuItem key={key} item={item} setIsNavOn={setIsNavOn} />)}
           {/* 스티커 아이콘 및 팝업 토글 기능 */}
-          <li className={styles.sticker_item}>
-            <Link href="#" onClick={toggleSticker}>
-              <span className={`${styles.ico_sticker} ${showSticker ? styles.active : ''}`}></span>
-            </Link>
-          </li>
         </ul>
       </nav>
       {/* 스티커 팝업 컴포넌트 조건부 렌더링 */}
-      {showSticker && <StickerPopup onClose={handleCloseSticker} />}
     </>
   );
 };

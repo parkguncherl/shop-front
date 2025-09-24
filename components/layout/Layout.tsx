@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from '../../styles/layout/layout.module.scss';
-import { Header, OrderReg, RightNav } from './index';
+import { Header } from './index';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Loading from '../Loading';
@@ -145,11 +145,6 @@ export const Layout = ({ children }: Props) => {
               }}
             />
             <div className={`container ${styles.container} ${closed ? styles.on : ''}`}>
-              <OrderReg
-                onClick={() => {
-                  localStorage.setItem('OMS_AREA', 'ORDER');
-                }}
-              />
               <div
                 className={`content ${styles.content}`}
                 onClick={() => {
@@ -158,11 +153,6 @@ export const Layout = ({ children }: Props) => {
               >
                 {children}
               </div>
-              <RightNav
-                onClick={() => {
-                  localStorage.setItem('OMS_AREA', 'OTHER');
-                }}
-              />
             </div>
           </div>
         )}
