@@ -42,6 +42,8 @@ interface VendorUiState {
 // API 상태
 interface VendorApiState {
   fetchVendors: (filters: VendorFilter) => AxiosPromise<any>;
+  /** 선택된 협력업체의 상품 목록 조회 */
+  fetchVendorProducts: (vendorId: number) => AxiosPromise<any>;
   createVendor: (request: VendorCreateRequest) => AxiosPromise<any>;
   updateVendor: (request: VendorUpdateRequest) => AxiosPromise<any>;
   deleteVendor: (id: number) => AxiosPromise<any>;
@@ -81,6 +83,7 @@ const initialStateCreator: StateCreator<VendorUiState & VendorApiState, any> = (
         'filter.phoneNo': filters.phoneNo || undefined,
       },
     }),
+  fetchVendorProducts: (vendorId) => authApi.get('/vendorProductMng/list', { params: { vendorId } }),
   createVendor: (request) => authApi.post('/partnerVendorMng/create', request),
   updateVendor: (request) => authApi.put('/partnerVendorMng/update', request),
   deleteVendor: (id) => authApi.delete(`/partnerVendorMng/${id}`),

@@ -29,6 +29,7 @@ import { usePartnerList } from '@/customHook/usePartnerList';
 import { PartnerCodePop } from '@/components/popup/system/PartnerCodePop';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import ProductForEachCategoryPop from '@/components/popup/product/productMng/ProductForEachCategoryPop';
+import ImageZoomPop from '@/components/popup/common/ImageZoomPop';
 import ImgEditPop, { ImgPropsOnEditPop } from '@/components/popup/common/ImgEditPop';
 import { useVendorList } from '@/customHook/useVendorList';
 
@@ -61,6 +62,8 @@ const ProductMng = () => {
   const menuNm = useCommonStore((s) => s.menuNm);
   const getFileUrl = useCommonStore((s) => s.getFileUrl);
   const getFileUrls = useCommonStore((s) => s.getFileUrls);
+  /** 이미지 확대보기 팝업 */
+  const [zoomImg, setZoomImg] = useState<{ url: string; title?: string } | null>(null);
   const selectFileList = useCommonStore((s) => s.selectFileList);
   const updateImageFile = useCommonStore((s) => s.updateImageFile);
   const uploadImageFiles = useCommonStore((s) => s.uploadImageFiles);
@@ -365,12 +368,19 @@ const ProductMng = () => {
       {
         field: 'imgUrl',
         headerName: '이미지',
+        suppressHeaderMenuButton: true,
         minWidth: 56,
         maxWidth: 56,
-        suppressHeaderMenuButton: true,
         cellStyle: { padding: '2px', display: 'flex', alignItems: 'center', justifyContent: 'center' },
-        cellRenderer: (params: { value?: string }) =>
-          params.value ? <img src={params.value} style={{ height: '46px', width: '46px', objectFit: 'cover', borderRadius: '4px' }} /> : null,
+        cellRenderer: (params: { value?: string; data?: ProductInfoWithImg }) =>
+          params.value ? (
+            <img
+              src={params.value}
+              title="클릭하면 크게 보기"
+              style={{ height: '46px', width: '46px', objectFit: 'cover', borderRadius: '4px', cursor: 'zoom-in' }}
+              onClick={() => setZoomImg({ url: params.value as string, title: params.data?.prodNm })}
+            />
+          ) : null,
       },
       { field: 'partnerNm', headerName: '매장', minWidth: 60, maxWidth: 60, suppressHeaderMenuButton: true },
       { field: 'prodNm', headerName: '품목명', minWidth: 200, maxWidth: 200, suppressHeaderMenuButton: true },
@@ -1030,6 +1040,8 @@ const ProductMng = () => {
         }}
         onClose={() => closeModal('IMG_DEL_CONF')}
       />
+
+      <ImageZoomPop open={zoomImg != null} imgUrl={zoomImg?.url} title={zoomImg?.title} onClose={() => setZoomImg(null)} />
     </div>
   );
 };

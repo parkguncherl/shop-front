@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
-import { CellEditRequestEvent, ColDef } from 'ag-grid-community';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { CellEditRequestEvent, CellStyle, ColDef } from 'ag-grid-community';
 import { Search, Table, TableHeader, Title } from '@/components';
 import { toastError, toastSuccess } from '@/components';
 import { useCommonStore, useVendorStore } from '@/stores';
@@ -14,14 +14,19 @@ import TunedGrid from '@/components/grid/TunedGrid';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import VendorMngAddPop from '@/components/popup/market/vendor/VendorMngAddPop';
+import ImageZoomPop from '@/components/popup/common/ImageZoomPop';
+import { VendorProductResponse } from '@/generated';
 import { VendorMngResponseVendorPagingInfo } from '@/generated';
 
 // 그리드에서 바로 수정 가능한 컬럼 (명칭 ~ 기타정보, 등록자 이전까지)
 const INLINE_EDITABLE = new Set(['vendorNm', 'location', 'phoneNo', 'phoneNo2', 'kakaoId', 'etcInfo']);
 
+type VendorProductResponseWithImg = VendorProductResponse & { imgUrl?: string };
+
 const VendorMng = () => {
   const { onGridReady } = useAgGridApi();
   const menuNm = useCommonStore((s) => s.menuNm);
+  const getFileUrls = useCommonStore((s) => s.getFileUrls);
 
   // 스토어 값은 각각 개별 셀렉터로 분리하여 사용 (zustand v5)
   const filters = useVendorStore((s) => s.filters);
@@ -34,6 +39,7 @@ const VendorMng = () => {
   const setAddOpen = useVendorStore((s) => s.setAddOpen);
   const setDelOpen = useVendorStore((s) => s.setDelOpen);
   const fetchVendors = useVendorStore((s) => s.fetchVendors);
+  const fetchVendorProducts = useVendorStore((s) => s.fetchVendorProducts);
   const updateVendor = useVendorStore((s) => s.updateVendor);
   const deleteVendor = useVendorStore((s) => s.deleteVendor);
 
@@ -60,6 +66,58 @@ const VendorMng = () => {
       toastError(resultMessage ?? '조회 중 오류가 발생했습니다.');
     }
   }, [listData, isSuccess]);
+
+  /** 하단 고정 합계행 - 등록(prodCnt) 합계 */
+  const pinnedBottomRowData = useMemo<VendorMngResponseVendorPagingInfo[] | undefined>(() => {
+    if (rowData.length === 0) return undefined;
+    return [
+      {
+        vendorNm: `합계 (${rowData.length}건)`,
+        prodCnt: rowData.reduce((acc, r) => acc + (r.prodCnt ?? 0), 0),
+      } as VendorMngResponseVendorPagingInfo,
+    ];
+  }, [rowData]);
+
+  /** 선택한 협력업체의 상품목록 */
+  const [productRowData, setProductRowData] = useState<VendorProductResponseWithImg[]>([]);
+  /** 이미지 확대보기 팝업 */
+  const [zoomImg, setZoomImg] = useState<{ url: string; title?: string } | null>(null);
+
+  const {
+    isLoading: isProductLoading,
+    isSuccess: isProductSuccess,
+    data: productListData,
+  } = useQuery({
+    queryKey: ['/vendorProductMng/list', selectedVendor?.id],
+    queryFn: () => fetchVendorProducts(selectedVendor!.id as number),
+    enabled: selectedVendor?.id != null,
+  });
+
+  useEffect(() => {
+    if (selectedVendor?.id == null) {
+      setProductRowData([]);
+      return;
+    }
+    if (!isProductSuccess) return;
+    const { resultCode, body, resultMessage } = productListData.data;
+    if (resultCode === 200) {
+      const rows: VendorProductResponseWithImg[] = body ?? [];
+      setProductRowData(rows);
+      // 대표이미지 presigned URL 은 1회 요청으로 일괄 조회 후 행에 imgUrl 로 주입
+      const keys = rows.map((r) => r.repSysFileNm).filter((k): k is string => !!k);
+      if (keys.length > 0) {
+        getFileUrls(keys)
+          .then((urlMap) => {
+            setProductRowData(rows.map((row) => (row.repSysFileNm ? { ...row, imgUrl: urlMap[row.repSysFileNm] } : { ...row })));
+          })
+          .catch(() => {
+            /* 이미지 해석 실패 시 썸네일만 비워둔다 */
+          });
+      }
+    } else {
+      toastError(resultMessage ?? '상품 조회 중 오류가 발생했습니다.');
+    }
+  }, [productListData, isProductSuccess, selectedVendor?.id]);
 
   const { mutate: deleteMutate } = useMutation({
     mutationFn: (id: number) => deleteVendor(id),
@@ -123,21 +181,22 @@ const VendorMng = () => {
       maxWidth: 37,
       cellStyle: GridSetting.CellStyle.CENTER,
       suppressHeaderMenuButton: true,
-      valueGetter: (p) => (p.node?.rowIndex != null ? p.node.rowIndex + 1 : ''),
+      // 하단 합계행에는 번호를 표시하지 않는다
+      valueGetter: (p) => (p.node?.isRowPinned() ? '' : p.node?.rowIndex != null ? p.node.rowIndex + 1 : ''),
     },
     {
       field: 'vendorNm',
       headerName: '명칭✎',
-      minWidth: 160,
-      maxWidth: 160,
+      minWidth: 90,
+      maxWidth: 90,
       editable: true,
       suppressHeaderMenuButton: true,
     },
     {
       field: 'location',
       headerName: '위치✎',
-      minWidth: 220,
-      maxWidth: 220,
+      minWidth: 180,
+      maxWidth: 180,
       editable: true,
       suppressHeaderMenuButton: true,
     },
@@ -168,6 +227,7 @@ const VendorMng = () => {
       editable: true,
       cellStyle: GridSetting.CellStyle.CENTER,
       suppressHeaderMenuButton: true,
+      hide: true,
     },
     {
       field: 'kakaoId',
@@ -181,9 +241,75 @@ const VendorMng = () => {
     {
       field: 'etcInfo',
       headerName: '기타정보✎',
-      minWidth: 150,
-      maxWidth: 150,
+      minWidth: 140,
+      maxWidth: 140,
       editable: true,
+      suppressHeaderMenuButton: true,
+    },
+  ];
+
+  // rowHeight 를 키우면 textAlign 만으로는 글자가 위로 붙으므로, 셀마다 세로 중앙 정렬을 함께 준다
+  // (ProductMng / ProdGroupMng 와 동일한 방식)
+  const rcCenter: CellStyle = { ...GridSetting.CellStyle.CENTER, display: 'flex', alignItems: 'center', justifyContent: 'center' };
+  const rcLeft: CellStyle = { ...GridSetting.CellStyle.LEFT, display: 'flex', alignItems: 'center' };
+
+  /** 선택한 협력업체의 상품목록 컬럼 */
+  const productColumnDefs: ColDef<VendorProductResponseWithImg>[] = [
+    {
+      headerName: 'No',
+      minWidth: 37,
+      maxWidth: 37,
+      cellStyle: rcCenter,
+      suppressHeaderMenuButton: true,
+      valueGetter: (p) => (p.node?.rowIndex != null ? p.node.rowIndex + 1 : ''),
+    },
+    {
+      field: 'imgUrl',
+      headerName: '이미지',
+      minWidth: 56,
+      maxWidth: 56,
+      cellStyle: { padding: '2px', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+      suppressHeaderMenuButton: true,
+      cellRenderer: (params: { value?: string; data?: VendorProductResponseWithImg }) =>
+        params.value ? (
+          <img
+            src={params.value}
+            title="클릭하면 크게 보기"
+            style={{ height: '46px', width: '46px', objectFit: 'cover', borderRadius: '4px', cursor: 'zoom-in' }}
+            onClick={() => setZoomImg({ url: params.value as string, title: params.data?.prodNm })}
+          />
+        ) : null,
+    },
+    {
+      field: 'prodNm',
+      headerName: '상품명',
+      minWidth: 160,
+      maxWidth: 160,
+      cellStyle: rcLeft,
+      suppressHeaderMenuButton: true,
+    },
+    {
+      field: 'season',
+      headerName: '시즌',
+      minWidth: 45,
+      maxWidth: 45,
+      cellStyle: rcCenter,
+      suppressHeaderMenuButton: true,
+    },
+    {
+      field: 'prodColors',
+      headerName: '컬러',
+      minWidth: 140,
+      maxWidth: 140,
+      cellStyle: rcLeft,
+      suppressHeaderMenuButton: true,
+    },
+    {
+      field: 'prodSizes',
+      headerName: '사이즈',
+      minWidth: 110,
+      maxWidth: 110,
+      cellStyle: rcLeft,
       suppressHeaderMenuButton: true,
     },
   ];
@@ -215,33 +341,66 @@ const VendorMng = () => {
           onEnter={() => refetch()}
         />
       </Search>
-      <Table>
-        <TableHeader count={rowData.length} search={refetch}></TableHeader>
-        <TunedGrid<VendorMngResponseVendorPagingInfo>
-          headerHeight={35}
-          onGridReady={onGridReady}
-          loading={isLoading}
-          rowData={rowData}
-          columnDefs={columnDefs}
-          defaultColDef={defaultColDef}
-          loadingOverlayComponent={CustomGridLoading}
-          noRowsOverlayComponent={CustomNoRowsOverlay}
-          className="default check"
-          rowSelection={{ mode: 'singleRow', enableClickSelection: true }}
-          readOnlyEdit
-          stopEditingWhenCellsLoseFocus
-          onCellEditRequest={onCellEditRequest}
-          onRowClicked={(e) => setSelectedVendor(e.data ?? null)}
-        />
-      </Table>
-      <div className="btnArea between">
-        <div className="right">
-          <button className="btn btn_primary" onClick={() => setAddOpen(true)}>
-            등록
-          </button>
-          <button className="btn btn_danger" onClick={() => setDelOpen(true)} disabled={!selectedVendor}>
-            삭제
-          </button>
+      <div className="tblPreview">
+        <div className="layoutBox">
+          {/* 좌: 협력업체 목록 */}
+          <div className="layout55">
+            <Table>
+              <TableHeader count={rowData.length} search={refetch}></TableHeader>
+              <TunedGrid<VendorMngResponseVendorPagingInfo>
+                headerHeight={35}
+                onGridReady={onGridReady}
+                loading={isLoading}
+                rowData={rowData}
+                columnDefs={columnDefs}
+                defaultColDef={defaultColDef}
+                pinnedBottomRowData={pinnedBottomRowData}
+                loadingOverlayComponent={CustomGridLoading}
+                noRowsOverlayComponent={CustomNoRowsOverlay}
+                className="default check"
+                rowSelection={{ mode: 'singleRow', enableClickSelection: true }}
+                readOnlyEdit
+                stopEditingWhenCellsLoseFocus
+                onCellEditRequest={onCellEditRequest}
+                onRowClicked={(e) => {
+                  if (e.node.isRowPinned()) return;
+                  setSelectedVendor(e.data ?? null);
+                }}
+              />
+            </Table>
+          </div>
+
+          {/* 우: 선택한 협력업체의 상품목록 */}
+          <div className="layout45">
+            <Table>
+              <TableHeader
+                count={productRowData.length}
+                title={selectedVendor?.vendorNm ? `${selectedVendor.vendorNm} 상품` : '상품목록'}
+                isCount={true}
+              ></TableHeader>
+              <TunedGrid<VendorProductResponseWithImg>
+                headerHeight={35}
+                loading={isProductLoading && selectedVendor?.id != null}
+                rowData={productRowData}
+                columnDefs={productColumnDefs}
+                defaultColDef={defaultColDef}
+                rowHeight={50}
+                loadingOverlayComponent={CustomGridLoading}
+                noRowsOverlayComponent={CustomNoRowsOverlay}
+                className={'default check'}
+              />
+            </Table>
+          </div>
+        </div>
+        <div className="btnArea between">
+          <div className="right">
+            <button className="btn btn_primary" onClick={() => setAddOpen(true)}>
+              등록
+            </button>
+            <button className="btn btn_danger" onClick={() => setDelOpen(true)} disabled={!selectedVendor}>
+              삭제
+            </button>
+          </div>
         </div>
       </div>
 
@@ -264,6 +423,8 @@ const VendorMng = () => {
         }}
         onClose={(_r) => setDelOpen(false)}
       />
+
+      <ImageZoomPop open={zoomImg != null} imgUrl={zoomImg?.url} title={zoomImg?.title} onClose={() => setZoomImg(null)} />
     </div>
   );
 };
