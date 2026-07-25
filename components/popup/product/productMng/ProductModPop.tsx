@@ -22,8 +22,6 @@ import { useVendorList } from '@/customHook/useVendorList';
 /** form 영역 입력 인터페이스 */
 export interface ProductModFields extends ProductMngRequestUpdateProduct {
   weather: ('spring' | 'summer' | 'autumn' | 'winter')[];
-  /** 신상번호 (openapi 타입 재생성 전에도 쓸 수 있도록 명시) */
-  sinsangNo?: string;
 }
 
 interface ProductContentShowPopProps {
@@ -215,7 +213,7 @@ const ProductModPop = ({ open, onClose, onSuccess, productInfo }: ProductContent
             <PopupFormGroup title={'품목정보'}>
               <PopupFormType className={'type2'}>
                 <FormInput<ProductModFields> control={control} name={'prodNm'} label={'품목명'} placeholder={'제목'} />
-                <FormDatePicker<ProductModFields> control={control} name={'makeYmd'} title={'등록일자'} />
+                <FormInput<ProductModFields> control={control} name={'orgProdNm'} label={'원상품명'} />
               </PopupFormType>
               <PopupFormType className={'type2'}>
                 <FormInput<ProductModFields> control={control} name={'orgAmt'} label={'원가'} />
@@ -253,9 +251,10 @@ const ProductModPop = ({ open, onClose, onSuccess, productInfo }: ProductContent
               <PopupFormType className={'type_2'}>
                 <FormInput<ProductModFields> control={control} name={'composition'} label={'혼용율'} />
               </PopupFormType>
-              {/* 신상번호 — 혼용율 아래, 두 칸을 모두 차지하도록 한 줄(type_1) 배치 */}
-              <PopupFormType className={'type_1'}>
+              {/* 신상번호 + 등록일자 — 두 칸(type2) 배치 */}
+              <PopupFormType className={'type2'}>
                 <FormInput<ProductModFields> control={control} name={'sinsangNo'} label={'신상번호'} />
+                <FormDatePicker<ProductModFields> control={control} name={'makeYmd'} title={'등록일자'} />
               </PopupFormType>
               <PopupFormType className={'type_1'}>
                 <FormInput<ProductModFields> control={control} name={'detInfo'} label={'상품설명'} inputType={'textarea'} style={{ height: 120 }} />

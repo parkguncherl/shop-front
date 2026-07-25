@@ -24,8 +24,6 @@ import { PARTNER_CODE } from '@/libs/const';
 /** form 영역 입력 인터페이스 */
 export interface ProductCreateFields extends ProductMngRequestInsertProduct {
   weather: ('spring' | 'summer' | 'autumn' | 'winter')[];
-  /** 신상번호 (openapi 타입 재생성 전에도 쓸 수 있도록 명시) */
-  sinsangNo?: string;
 }
 
 export interface ProductInfoCreateFields {
@@ -256,7 +254,7 @@ const ProductInfoAddPop = ({ open, onClose, onSuccess, productInfo, sizeInfo }: 
               <PopupFormGroup title={'품목정보'}>
                 <PopupFormType className={'type2'}>
                   <FormInput<ProductInfoCreateFields> control={control} name={'product.prodNm'} label={'품목명'} placeholder={'제목'} />
-                  <FormDatePicker<ProductInfoCreateFields> control={control} name={'product.makeYmd'} title={'등록일자'} />
+                  <FormInput<ProductInfoCreateFields> control={control} name={'product.orgProdNm'} label={'원상품명'} />
                 </PopupFormType>
                 <PopupFormType className={'type2'}>
                   <FormInput<ProductInfoCreateFields> control={control} name={'product.orgAmt'} label={'원가'} />
@@ -309,9 +307,10 @@ const ProductInfoAddPop = ({ open, onClose, onSuccess, productInfo, sizeInfo }: 
                     placeholder={'선택'}
                   />
                 </PopupFormType>
-                {/* 신상번호 — 혼용율 아래, 두 칸을 모두 차지하도록 한 줄(type_1) 배치 */}
-                <PopupFormType className={'type_1'}>
+                {/* 신상번호 + 등록일자 — 두 칸(type2) 배치 */}
+                <PopupFormType className={'type2'}>
                   <FormInput<ProductInfoCreateFields> control={control} name={'product.sinsangNo'} label={'신상번호'} />
+                  <FormDatePicker<ProductInfoCreateFields> control={control} name={'product.makeYmd'} title={'등록일자'} />
                 </PopupFormType>
                 <PopupFormType className={'type_1'}>
                   <FormInput<ProductInfoCreateFields>

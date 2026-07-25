@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Search, Table, Title, toastSuccess } from '@/components';
 import {
   ProductMngRequestProductDetInfoFilter,
@@ -15,7 +15,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { defaultColDef, GridSetting } from '@/libs/ag-grid';
 import { useAgGridApi } from '@/hooks';
 import { authApi } from '@/libs';
-import TunedGrid from '@/components/grid/TunedGrid';
+import TunedGrid, { TunedGridRef } from '@/components/grid/TunedGrid';
 import useFilters from '@/hooks/useFilters';
 import { useProductMngStore } from '@/stores/product/useProductMngStore';
 import { PARTNER_CODE, Placeholder } from '@/libs/const';
@@ -56,7 +56,7 @@ interface targetedFileSetInfo extends Omit<SrcEnumeratorProps, 'title' | 'srcInf
 const ProductMng = () => {
   /** Grid Api */
   const { onGridReady } = useAgGridApi();
-
+  const gridRef = useRef<TunedGridRef<ProductInfoWithImg>>(null);
   /** 공통 스토어 - State */
   const upMenuNm = useCommonStore((s) => s.upMenuNm);
   const menuNm = useCommonStore((s) => s.menuNm);
@@ -712,6 +712,7 @@ const ProductMng = () => {
                 headerHeight={35}
                 // 46px 썸네일이 들어가도록 (ProdGroupMng 우측 그리드와 동일)
                 rowHeight={50}
+                ref={gridRef}
                 onGridReady={onGridReady}
                 loading={isProductInfosLoading}
                 rowData={productInfoList}
@@ -950,6 +951,7 @@ const ProductMng = () => {
           closeModal(modals.type);
           productInfosRefetch();
           onDetFiltersReset();
+          gridRef.current?.api.deselectAll();
         }}
         productInfo={selectedRowsData}
       />
