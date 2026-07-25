@@ -5,6 +5,7 @@ import { Html, useImage } from 'react-konva-utils';
 import { Box } from 'konva/lib/shapes/Transformer';
 import { useHistory } from '@/hooks/drawing/useHistory';
 import axios from 'axios';
+import { authApi } from '@/libs';
 import path from 'path';
 import icoUndo from '@/public/images/ico_undo.svg';
 import icoRedo from '@/public/images/ico_redo.svg';
@@ -574,12 +575,21 @@ const CanvasByKonva = ({
 
   const getCleanKonvaImage = async (presignedUrl: string): Promise<HTMLImageElement | undefined> => {
     try {
-      // 1. axios로 이미지를 '데이터'로서 가져옵니다.
-      const response = await axios.get(presignedUrl, {
-        responseType: 'blob',
-      });
+      // R2 presigned URL 을 브라우저가 직접 xhr 로 받으면 CORS 가 걸리므로,
+      // 오브젝트 키를 추출해 같은 오리진 백엔드 프록시(/common/fileProxy)로 받는다.
+      let response;
+      const isR2 = /r2\.cloudflarestorage\.com/.test(presignedUrl) || /[?&]X-Amz-Signature=/.test(presignedUrl);
+      if (isR2) {
+        const u = new URL(presignedUrl);
+        // pathname: /<bucket>/<key...> → 첫 세그먼트(bucket) 제거한 나머지가 오브젝트 키(sysFileNm)
+        const fileKey = decodeURIComponent(u.pathname.replace(/^\/[^/]+\//, ''));
+        response = await authApi.get('/common/fileProxy', { params: { fileKey }, responseType: 'blob' });
+      } else {
+        // 로컬 blob URL 등 R2 가 아닌 경우는 그대로 사용
+        response = await axios.get(presignedUrl, { responseType: 'blob' });
+      }
 
-      // 2. 내 도메인 소속의 임시 URL로 만듭니다. (신분 세탁)
+      // 내 도메인 소속의 임시 URL로 만듭니다. (신분 세탁)
       const blobUrl = URL.createObjectURL(response.data);
 
       // 3. Konva용 이미지 객체를 생성합니다.
@@ -626,7 +636,7 @@ const CanvasByKonva = ({
 
   /** 참조를 통해 외부로 노출되는 영역을 정의함 */
   useImperativeHandle<Konva.Stage, CanvasByKonvaRef>(ref, () => {
-    return Object.assign<Konva.Stage, CanvasByKonvaCustomsRef>(stageRef.current ?? {} as any, {
+    return Object.assign<Konva.Stage, CanvasByKonvaCustomsRef>(stageRef.current ?? ({} as any), {
       customs: {
         api: {
           addNewText: (value) => {

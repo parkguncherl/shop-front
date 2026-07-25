@@ -74,6 +74,8 @@ const VendorMng = () => {
       {
         vendorNm: `합계 (${rowData.length}건)`,
         prodCnt: rowData.reduce((acc, r) => acc + (r.prodCnt ?? 0), 0),
+        oneMonthsellCnt: rowData.reduce((acc, r) => acc + (r.oneMonthsellCnt ?? 0), 0),
+        threeMonthsellCnt: rowData.reduce((acc, r) => acc + (r.threeMonthsellCnt ?? 0), 0),
       } as VendorMngResponseVendorPagingInfo,
     ];
   }, [rowData]);
