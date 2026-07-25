@@ -5,7 +5,7 @@ import { ApiResponseListSelectFavorites } from '@/generated';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { authApi } from '@/libs';
 import { toastError, toastSuccess } from '@/components/ToastMessage';
-import CustomShortcutButton, { COMMON_SHORTCUTS } from '@/components/CustomShortcutButton';
+import CustomShortcutButton from '@/components/CustomShortcutButton';
 
 interface Props {
   title: string;
@@ -30,10 +30,10 @@ export const Title = ({ title, search, reset, children, detail, className }: Pro
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const queryClient = useQueryClient();
 
-  const {
-    data: favoriteData,
-    isSuccess: isFavSuccess,
-  } = useQuery({ queryKey: ['favoriteList'], queryFn: () => authApi.get<ApiResponseListSelectFavorites>('/mypage/favorites', {}) });
+  const { data: favoriteData, isSuccess: isFavSuccess } = useQuery({
+    queryKey: ['favoriteList'],
+    queryFn: () => authApi.get<ApiResponseListSelectFavorites>('/mypage/favorites', {}),
+  });
 
   useEffect(() => {
     if (isFavSuccess) {
@@ -109,10 +109,10 @@ export const Title = ({ title, search, reset, children, detail, className }: Pro
           <strong>{title}</strong>
           {!detail && (
             <div className="util">
-              <CustomShortcutButton className={`refresh ${refreshBtn ? 'on' : ''}`} onClick={handleRefreshBtn} shortcut={COMMON_SHORTCUTS.shiftF5}>
+              <CustomShortcutButton className={`refresh ${refreshBtn ? 'on' : ''}`} onClick={handleRefreshBtn}>
                 새로고침
               </CustomShortcutButton>
-              <CustomShortcutButton className={`favorite ${isFavorite ? 'on' : ''}`} onClick={onClickFavoriteReg} shortcut={COMMON_SHORTCUTS.favo}>
+              <CustomShortcutButton className={`favorite ${isFavorite ? 'on' : ''}`} onClick={onClickFavoriteReg}>
                 즐겨찾기 등록
               </CustomShortcutButton>
             </div>
