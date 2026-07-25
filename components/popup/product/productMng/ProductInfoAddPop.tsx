@@ -254,7 +254,7 @@ const ProductInfoAddPop = ({ open, onClose, onSuccess, productInfo, sizeInfo }: 
               <PopupFormGroup title={'품목정보'}>
                 <PopupFormType className={'type2'}>
                   <FormInput<ProductInfoCreateFields> control={control} name={'product.prodNm'} label={'품목명'} placeholder={'제목'} />
-                  <FormInput<ProductInfoCreateFields> control={control} name={'product.orgProdNm'} label={'원상품명'} />
+                  <FormInput<ProductInfoCreateFields> control={control} name={'product.orgProdNm'} label={'원품목명'} />
                 </PopupFormType>
                 <PopupFormType className={'type2'}>
                   <FormInput<ProductInfoCreateFields> control={control} name={'product.orgAmt'} label={'원가'} />

@@ -213,7 +213,7 @@ const ProductModPop = ({ open, onClose, onSuccess, productInfo }: ProductContent
             <PopupFormGroup title={'품목정보'}>
               <PopupFormType className={'type2'}>
                 <FormInput<ProductModFields> control={control} name={'prodNm'} label={'품목명'} placeholder={'제목'} />
-                <FormInput<ProductModFields> control={control} name={'orgProdNm'} label={'원상품명'} />
+                <FormInput<ProductModFields> control={control} name={'orgProdNm'} label={'원품목명'} />
               </PopupFormType>
               <PopupFormType className={'type2'}>
                 <FormInput<ProductModFields> control={control} name={'orgAmt'} label={'원가'} />
