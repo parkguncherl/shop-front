@@ -483,7 +483,7 @@ const ProductForEachCategoryPop = ({ open, onClose }: ProductContentShowPopProps
                     }
                   }}
                 >
-                  삭제
+                  제외
                 </button>
                 <button className="btn" onClick={commonOnCloseCallback}>
                   닫기
