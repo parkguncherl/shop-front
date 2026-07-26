@@ -361,7 +361,7 @@ const ProductDetInfoPop = ({ open, onClose, productInfo }: ProductContentShowPop
       },
       {
         field: 'productDetCntn',
-        headerName: '상세내용',
+        headerName: '거래처 사이즈',
         minWidth: 180,
         maxWidth: 200,
         suppressHeaderMenuButton: true,
