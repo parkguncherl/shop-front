@@ -137,6 +137,7 @@ export const PARTNER_CODE = {
   bodySize: { code: 'P0004', name: '신체사이즈' },
   weight: { code: 'P0005', name: '몸무게' },
   domae: { code: 'P0006', name: '협력업체' },
+  season: { code: 'P0006', name: '시즌' }, // 협력업체(도매)가 벤더 테이블로 이전되며 P0006 는 시즌 코드로 재사용
 };
 
 export const DefaultOptions = {
