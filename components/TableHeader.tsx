@@ -105,6 +105,7 @@ export const TableHeader = ({
               <span>{title ?? '검색'}</span>
               <input
                 ref={inputRef}
+                className={'ant-input'}
                 style={{ width: 225 }} // 글자크기 16자까지 들어가게 대표님 요청
                 placeholder={'표 내 검색'}
                 type={'text'}

@@ -6,7 +6,8 @@ import PopupFormBox from '@/components/popup/content/PopupFormBox';
 import PopupFormGroup from '@/components/popup/content/PopupFormGroup';
 import PopupFormType from '@/components/popup/content/PopupFormType';
 import FormInput from '@/components/form/FormInput';
-import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
+import { TunedReactSelector } from '@/components/TunedReactSelector';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { YupSchema } from '@/libs';
@@ -276,14 +277,20 @@ const ProductInfoAddPop = ({ open, onClose, onSuccess, productInfo, sizeInfo }: 
                   <FormInput<ProductInfoCreateFields> control={control} name={'product.discountRate'} label={'할인율'} />
                 </PopupFormType>
                 <PopupFormType className={'type2'}>
-                  <FormDropDown<ProductInfoCreateFields>
+                  <Controller
                     control={control}
                     name={'product.vendorId'}
-                    title={'협력업체'}
-                    multiple={false}
-                    options={vendorList.data}
-                    placeholder={'선택'}
-                    required
+                    render={({ field }) => (
+                      <TunedReactSelector
+                        title={'협력업체'}
+                        placeholder={'협력업체 검색'}
+                        required
+                        values={field.value ?? undefined}
+                        options={vendorList.data ?? []}
+                        onChange={(option) => field.onChange(option?.value ?? undefined)}
+                        onErased={() => field.onChange(undefined)}
+                      />
+                    )}
                   />
                   <FormDropDown<ProductInfoCreateFields>
                     control={control}

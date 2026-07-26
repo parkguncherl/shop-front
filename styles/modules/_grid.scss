@@ -486,6 +486,24 @@
     border-top: 1px solid #ddd;
   }
 }
+// 드롭다운을 dd 영역 끝까지 넓히기 (selBox 전역 width 삭제 대응)
+dl.fullWidthSel {
+  & dd { width: 100%; }
+  & .formBox { width: 100%; }
+  & .selBox { width: 100%; }
+  & .selBox > select { width: 100%; }
+}
+// 그리드 상단 헤더 기본 레이아웃 (.content 외부, 예: 팝업 내 그리드에서 검색건수 + 표내검색을 한 줄로)
+.gridBoxInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  & > .left > ul {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+}
 // 그리드 내 검색
 .gridFindDiv {
   position: relative;

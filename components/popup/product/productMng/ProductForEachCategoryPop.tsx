@@ -450,25 +450,6 @@ const ProductForEachCategoryPop = ({ open, onClose }: ProductContentShowPopProps
                 <button
                   className={`btn btn_primary`}
                   onClick={() => {
-                    const api = RefForLeftGrid.current?.api;
-                    if (api?.getSelectedRows().length === 1) {
-                      const categoryProductId = api.getSelectedRows()[0].categoryProductId;
-
-                      deleteCategoryProductMutate({
-                        id: categoryProductId,
-                      });
-                    } else {
-                      toastError('삭제할데이터가 한건 반드시 선택되어야 합니다.');
-                    }
-                  }}
-                >
-                  삭제
-                </button>
-              </div>
-              <div className="right">
-                <button
-                  className={`btn btn_primary`}
-                  onClick={() => {
                     const api = RefForRightGrid.current?.api;
                     if (api?.getSelectedRows().length === 1) {
                       const id = api.getSelectedRows()[0].id;
@@ -485,6 +466,25 @@ const ProductForEachCategoryPop = ({ open, onClose }: ProductContentShowPopProps
                 >
                   추가
                 </button>
+              </div>
+              <div className="right">
+                <button
+                  className={`btn btn_primary`}
+                  onClick={() => {
+                    const api = RefForLeftGrid.current?.api;
+                    if (api?.getSelectedRows().length === 1) {
+                      const categoryProductId = api.getSelectedRows()[0].categoryProductId;
+
+                      deleteCategoryProductMutate({
+                        id: categoryProductId,
+                      });
+                    } else {
+                      toastError('삭제할데이터가 한건 반드시 선택되어야 합니다.');
+                    }
+                  }}
+                >
+                  삭제
+                </button>
                 <button className="btn" onClick={commonOnCloseCallback}>
                   닫기
                 </button>
@@ -494,30 +494,59 @@ const ProductForEachCategoryPop = ({ open, onClose }: ProductContentShowPopProps
         }
       >
         <PopupContent>
-          <PopupSearchBox>
-            <PopupSearchType className={'type_1'}>
-              <Search.DropDown
-                title={'카테고리'}
-                name={'categoryId'}
-                defaultOptions={categoryOptions}
-                value={filtersForProdInfoByCategory.categoryId}
-                onChange={onChangeFiltersForProdInfoByCategoryCommonCallback}
-                dropDownStyle={{ width: '960px' }}
-              />
-              <Search.Input
-                title={'상품명'}
-                name={'prodNm'}
-                placeholder={'키워드 입력 후 엔터키 클릭'}
-                value={filtersForProdInfoListWithExclusion.prodNm}
-                onEnter={search}
-                onChange={onChangeFiltersForProdInfoListWithExclusionCommonCallback}
-                filters={filtersForProdInfoListWithExclusion}
-              />
-            </PopupSearchType>
-          </PopupSearchBox>
+          {/* 검색영역은 오른쪽 그리드(카테고리별 상품) 위로 우측 정렬 */}
           <div className="mt10">
             <div className="layoutBox">
+              <div className={'layout45'}>
+                <PopupSearchBox style={{ height: 74, display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+                  <PopupSearchType className={'type_1'} style={{ fontWeight: 600, fontSize: 'var(--m-size)', textAlign: 'left', width: '100%' }}>
+                    선택가능 상품 목록
+                  </PopupSearchType>
+                </PopupSearchBox>
+                <TableHeader count={productInfoListWithExclusion.length} gridRef={RefForRightGrid}></TableHeader>
+                <TunedGrid<ProductMngResponseProductInfoByExclusion>
+                  columnDefs={columnDefsOnRight}
+                  rowData={productInfoListWithExclusion}
+                  onGridReady={onRightGridReady}
+                  loadingOverlayComponent={CustomGridLoading}
+                  noRowsOverlayComponent={CustomNoRowsOverlay}
+                  ref={RefForRightGrid}
+                  loading={isProductInfosWithExclusionLoading}
+                  rowSelection={{
+                    mode: 'singleRow',
+                    enableClickSelection: true,
+                  }}
+                  // onSelectionChanged={(event) => {
+                  //   const selectedRows = event.api.getSelectedRows();
+                  //   setSelectedProductInfo(selectedRows.length > 0 ? selectedRows[0] : undefined);
+                  // }}
+                />
+              </div>
               <div className={'layout55'}>
+                <PopupSearchBox style={{ height: 74 }}>
+                  <PopupSearchType className={'type_1'}>
+                    <Search.DropDown
+                      title={'카테고리'}
+                      name={'categoryId'}
+                      defaultOptions={categoryOptions}
+                      value={filtersForProdInfoByCategory.categoryId}
+                      onChange={onChangeFiltersForProdInfoByCategoryCommonCallback}
+                      wrapperClassNames={'fullWidthSel'}
+                      dropDownStyle={{ width: '100%' }}
+                    />
+                  </PopupSearchType>
+                  <PopupSearchType className={'type_1'}>
+                    <Search.Input
+                      title={'상품명'}
+                      name={'prodNm'}
+                      placeholder={'키워드 입력 후 엔터키 클릭'}
+                      value={filtersForProdInfoListWithExclusion.prodNm}
+                      onEnter={search}
+                      onChange={onChangeFiltersForProdInfoListWithExclusionCommonCallback}
+                      filters={filtersForProdInfoListWithExclusion}
+                    />
+                  </PopupSearchType>
+                </PopupSearchBox>
                 <TableHeader count={productInfoListByCategory.length} gridRef={RefForLeftGrid}></TableHeader>
                 <TunedGrid<ProductMngResponseCategoryProductInfo>
                   columnDefs={columnDefsOnLeft}
@@ -536,26 +565,6 @@ const ProductForEachCategoryPop = ({ open, onClose }: ProductContentShowPopProps
                   //   setSelectedProductInfoByCategory(selectedRows.length > 0 ? selectedRows[0] : undefined);
                   // }}
                   onRowDragEnd={onRowDragEndHandlerOfLeftSided}
-                />
-              </div>
-              <div className={'layout45'}>
-                <TableHeader count={productInfoListWithExclusion.length} gridRef={RefForRightGrid}></TableHeader>
-                <TunedGrid<ProductMngResponseProductInfoByExclusion>
-                  columnDefs={columnDefsOnRight}
-                  rowData={productInfoListWithExclusion}
-                  onGridReady={onRightGridReady}
-                  loadingOverlayComponent={CustomGridLoading}
-                  noRowsOverlayComponent={CustomNoRowsOverlay}
-                  ref={RefForRightGrid}
-                  loading={isProductInfosWithExclusionLoading}
-                  rowSelection={{
-                    mode: 'singleRow',
-                    enableClickSelection: true,
-                  }}
-                  // onSelectionChanged={(event) => {
-                  //   const selectedRows = event.api.getSelectedRows();
-                  //   setSelectedProductInfo(selectedRows.length > 0 ? selectedRows[0] : undefined);
-                  // }}
                 />
               </div>
             </div>

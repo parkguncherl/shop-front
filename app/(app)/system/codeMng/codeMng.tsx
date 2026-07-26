@@ -73,7 +73,7 @@ const CodeMng = () => {
     { field: 'codeEtc2', headerName: '기타정보2', minWidth: 150, tooltipField: 'codeEtc2', suppressHeaderMenuButton: true },
     { field: 'codeOrder', headerName: '순서', minWidth: 70, maxWidth: 80, cellStyle: GridSetting.CellStyle.CENTER, suppressHeaderMenuButton: true },
     {
-      field: 'deleteYn',
+      field: 'delYn',
       headerName: '사용여부',
       minWidth: 90,
       maxWidth: 100,
