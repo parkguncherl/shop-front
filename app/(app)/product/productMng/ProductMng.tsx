@@ -382,15 +382,15 @@ const ProductMng = () => {
             />
           ) : null,
       },
-      { field: 'partnerNm', headerName: '매장', minWidth: 60, maxWidth: 60, suppressHeaderMenuButton: true },
+      { field: 'vendorNm', headerName: '협력업체', minWidth: 80, maxWidth: 80, suppressHeaderMenuButton: true },
       { field: 'prodNm', headerName: '품목명', minWidth: 200, maxWidth: 200, suppressHeaderMenuButton: true },
       { field: 'season', headerName: '계절', minWidth: 37, maxWidth: 37, suppressHeaderMenuButton: true, cellStyle: rcCenter },
       { field: 'prodSizes', headerName: '크기', minWidth: 90, maxWidth: 90, suppressHeaderMenuButton: true, cellStyle: rcCenter },
       {
         field: 'prodColors',
         headerName: '색상',
-        minWidth: 140,
-        maxWidth: 140,
+        minWidth: 145,
+        maxWidth: 145,
         editable: true,
         cellEditor: 'agSelectCellEditor',
         cellEditorParams: (params: ICellEditorParams) => {
@@ -426,7 +426,7 @@ const ProductMng = () => {
         },
         suppressHeaderMenuButton: true,
       },
-      { field: 'makeYmd', headerName: '등록일', minWidth: 65, maxWidth: 65, suppressHeaderMenuButton: true, cellStyle: rcCenter },
+      { field: 'makeYmd', headerName: '등록', minWidth: 40, maxWidth: 40, suppressHeaderMenuButton: true, cellRenderer: 'MONTH_DAY', cellStyle: rcCenter },
       {
         field: 'relCount',
         headerName: '연계',

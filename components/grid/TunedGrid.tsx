@@ -133,6 +133,7 @@ const TunedGrid = <P, PO extends DefaultPagingOptions = DefaultPagingOptions>({ 
   const gridComponents = {
     ...props.components,
     NUMBER_COMMA: GridSetting.CellRenderer.NUMBER_COMMA,
+    MONTH_DAY: GridSetting.CellRenderer.MONTH_DAY,
     PERCENTAGE: GridSetting.CellRenderer.PERCENTAGE,
     DATE: GridSetting.CellRenderer.DATE,
     DATETIME: GridSetting.CellRenderer.DATETIME,

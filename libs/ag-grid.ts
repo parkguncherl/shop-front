@@ -92,7 +92,17 @@ export const GridSetting = {
 
       return date.format('YYYY-MM-DD');
     },
+    MONTH_DAY: (params: any) => {
+      if (params.value == null || params.value === '') return '';
 
+      const date = dayjs(params.value);
+
+      if (!date.isValid()) {
+        return params.value;
+      }
+
+      return date.format('MM-DD');
+    },
     DATETIME: (params: any) => {
       if (params.value == null || params.value === '') return '';
 
