@@ -1,7 +1,7 @@
 'use client';
 
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode } from 'react';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SessionProvider, signOut } from 'next-auth/react';
 import { ToastContainer } from 'react-toastify';
@@ -57,30 +57,6 @@ export default function RootProvider({ children }: { children: ReactNode }) {
     },
   });
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      const functionKeys = ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11'];
-      if (functionKeys.includes(event.key)) {
-        event.preventDefault();
-        console.log('key press prevented==>', event.key);
-      }
-
-      if (event.ctrlKey && (event.key === 'a' || event.key === 'A')) {
-        event.preventDefault();
-        console.log('key press prevented==>', event.key);
-      }
-    };
-
-    if (typeof window !== 'undefined') {
-      window.addEventListener('keydown', handleKeyDown);
-    }
-
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('keydown', handleKeyDown);
-      }
-    };
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
