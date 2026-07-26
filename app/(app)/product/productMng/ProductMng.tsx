@@ -794,7 +794,7 @@ const ProductMng = () => {
                       }
                     }}
                   >
-                    {`상세목록`}
+                    {`색상/사이즈`}
                   </button>
                 </div>
               </div>
