@@ -96,7 +96,7 @@ const SeasonOrderSection = ({ open }: { open: boolean }) => {
                 onChange={(e) => onChangeOrder(row, Number(e.target.value))}
                 style={{ height: 28, borderRadius: 4, padding: '0 6px' }}
               >
-                {[1, 2, 3, 4].map((n) => (
+                {[1, 2, 3, 4, 9].map((n) => (
                   <option key={n} value={n}>
                     {n}
                   </option>
