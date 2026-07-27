@@ -9,8 +9,8 @@ import { toastError } from '@/components/ToastMessage';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { Search } from '@/components/content';
 
-import icoUndo from '@/public/images/ico_undo.svg';
-import icoRedo from '@/public/images/ico_redo.svg';
+// import icoUndo from '@/public/images/ico_undo.svg';
+// import icoRedo from '@/public/images/ico_redo.svg';
 
 export interface ImgPropsOnEditPop {
   imgFileId?: number;
@@ -38,6 +38,7 @@ const ImgEditPop = ({ open, onClose, imgProps, onFileIsExportedByConf }: ImgEdit
   const [filters, onChangeFilters, onFiltersReset] = useFilters({
     textColor: '#000000',
     textScale: undefined,
+    textWeight: undefined, // '100' | '200' | '300' | '400' | '500' | '600' | '700'
     lineColor: '#FF4A00',
     lineWidth: undefined,
   });
@@ -158,6 +159,51 @@ const ImgEditPop = ({ open, onClose, imgProps, onFileIsExportedByConf }: ImgEdit
                     onChangeFilters(name, Number(value));
                   }}
                 />
+                <Search.DropDown
+                  title={'텍스트 두께'}
+                  name={'textWeight'}
+                  defaultOptions={[
+                    {
+                      key: '100',
+                      value: '100',
+                      label: 'thin',
+                    },
+                    {
+                      key: '200',
+                      value: '200',
+                      label: 'extra light',
+                    },
+                    {
+                      key: '300',
+                      value: '300',
+                      label: 'light',
+                    },
+                    {
+                      key: '400',
+                      value: '400',
+                      label: 'normal',
+                    },
+                    {
+                      key: '500',
+                      value: '500',
+                      label: 'medium',
+                    },
+                    {
+                      key: '600',
+                      value: '600',
+                      label: 'semi bold',
+                    },
+                    {
+                      key: '700',
+                      value: '700',
+                      label: 'bold',
+                    },
+                  ]}
+                  value={filters.textWeight}
+                  onChange={(name, value) => {
+                    onChangeFilters(name, Number(value));
+                  }}
+                />
                 <dl>
                   <dt>
                     <label>{'뒤로(혹은 앞으로)가기'}</label>
@@ -165,22 +211,38 @@ const ImgEditPop = ({ open, onClose, imgProps, onFileIsExportedByConf }: ImgEdit
                   <dd>
                     <div className={`formBox`}>
                       <div style={{ padding: '3px' }}>
-                        <img
-                          src={icoUndo.src}
-                          style={{ width: '15px', height: '15px' }}
+                        {/*<img*/}
+                        {/*  src={icoUndo.src}*/}
+                        {/*  style={{ width: '15px', height: '15px' }}*/}
+                        {/*  onClick={() => {*/}
+                        {/*    canvasByKonvaRef.current!.customs.api.undo();*/}
+                        {/*  }}*/}
+                        {/*/>*/}
+                        <button
+                          className="btn btn_primary"
                           onClick={() => {
                             canvasByKonvaRef.current!.customs.api.undo();
                           }}
-                        />
+                        >
+                          뒤로
+                        </button>
                       </div>
                       <div style={{ padding: '3px' }}>
-                        <img
-                          src={icoRedo.src}
-                          style={{ width: '15px', height: '15px' }}
+                        {/*<img*/}
+                        {/*  src={icoRedo.src}*/}
+                        {/*  style={{ width: '15px', height: '15px' }}*/}
+                        {/*  onClick={() => {*/}
+                        {/*    canvasByKonvaRef.current!.customs.api.redo();*/}
+                        {/*  }}*/}
+                        {/*/>*/}
+                        <button
+                          className="btn btn_primary"
                           onClick={() => {
                             canvasByKonvaRef.current!.customs.api.redo();
                           }}
-                        />
+                        >
+                          앞으로
+                        </button>
                       </div>
                     </div>
                   </dd>
@@ -197,6 +259,7 @@ const ImgEditPop = ({ open, onClose, imgProps, onFileIsExportedByConf }: ImgEdit
               textConfig={{
                 color: filters.textColor,
                 scale: filters.textScale,
+                weight: filters.textWeight,
               }}
               lineConfig={{
                 color: filters.lineColor,

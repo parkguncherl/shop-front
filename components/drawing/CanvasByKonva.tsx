@@ -21,6 +21,7 @@ interface CanvasByKonvaProps {
   textConfig?: {
     color?: string;
     scale?: number;
+    weight?: '100' | '200' | '300' | '400' | '500' | '600' | '700';
   };
   lineConfig?: Omit<Lines, 'tool' | 'points'>;
   preventDrawing?: boolean; // 드로잉 비활성화 여부
@@ -100,6 +101,9 @@ interface ImageRepInfo extends locProps {
 interface TextInfo extends locProps {
   content: string;
   color?: string;
+  style?: {
+    weight?: '100' | '200' | '300' | '400' | '500' | '600' | '700';
+  };
 }
 interface Lines {
   tool: string;
@@ -281,6 +285,8 @@ const EditableText = ({ textInfo, onMouseDown, onDragEnd, onEditEnd, onChangeByE
         scaleX={textInfo?.scaleX}
         scaleY={textInfo?.scaleY}
         rotation={textInfo?.rotation}
+        fontFamily={'NotoSansKR'} // reset.scss 이하 NotoSansKR family에 의존
+        fontStyle={`${textInfo.style?.weight || ''}`}
         draggable={!enablePreviewMode}
         onMouseDown={onMouseDown}
         onDragEnd={onDragEnd}
@@ -647,8 +653,6 @@ const CanvasByKonva = ({
                 content: value ? value : '신규 작성',
                 x: 50,
                 y: 50,
-                // width: value ? value.length * 20 : 200,
-                // height: 20,
                 width: value
                   ? value.length *
                     (textConfig?.scale
@@ -670,11 +674,12 @@ const CanvasByKonva = ({
                       : textConfig?.scale * 1.2
                     : textConfig?.scale
                   : 20,
-                // scaleX: 1,
-                // scaleY: 1,
                 scaleX: (textConfig?.scale || 20) / 20,
                 scaleY: (textConfig?.scale || 20) / 20,
                 rotation: 0,
+                style: {
+                  weight: textConfig?.weight,
+                },
               },
             ]);
           },
