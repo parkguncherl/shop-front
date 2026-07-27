@@ -119,7 +119,7 @@ const ImgEditPop = ({ open, onClose, imgProps, onFileIsExportedByConf }: ImgEdit
             <div className="searchArea">
               <div className={'type_2'}>
                 <CustomColorPicker
-                  title={'텍스트 색상'}
+                  title={'텍스트'}
                   name={'textColor'}
                   color={filters.textColor}
                   onColorChangeCompleted={(name, color) => {
@@ -129,29 +129,8 @@ const ImgEditPop = ({ open, onClose, imgProps, onFileIsExportedByConf }: ImgEdit
                   onColorPickerOpened={() => setColorPickerOpened(true)}
                   onColorPickerClosed={() => setColorPickerOpened(false)}
                 />
-                <CustomColorPicker
-                  title={'줄(라인) 색상'}
-                  name={'lineColor'}
-                  color={filters.lineColor}
-                  onColorChangeCompleted={(name, color) => {
-                    onChangeFilters(name, color.hex);
-                  }}
-                  colorPickerCoordinates={{
-                    left: 360,
-                  }}
-                  wrapperRef={topSearchWrapperRef}
-                />
                 <Search.DropDown
-                  title={'줄 너비'}
-                  name={'lineWidth'}
-                  codeUpper={'10040'}
-                  value={filters.lineWidth}
-                  onChange={(name, value) => {
-                    onChangeFilters(name, Number(value));
-                  }}
-                />
-                <Search.DropDown
-                  title={'텍스트 크기'}
+                  title={'크기'}
                   name={'textScale'}
                   codeUpper={'10050'}
                   value={filters.textScale}
@@ -160,7 +139,7 @@ const ImgEditPop = ({ open, onClose, imgProps, onFileIsExportedByConf }: ImgEdit
                   }}
                 />
                 <Search.DropDown
-                  title={'텍스트 두께'}
+                  title={'두께'}
                   name={'textWeight'}
                   defaultOptions={[
                     {
@@ -204,10 +183,29 @@ const ImgEditPop = ({ open, onClose, imgProps, onFileIsExportedByConf }: ImgEdit
                     onChangeFilters(name, Number(value));
                   }}
                 />
+                <CustomColorPicker
+                  title={'라인'}
+                  name={'lineColor'}
+                  color={filters.lineColor}
+                  onColorChangeCompleted={(name, color) => {
+                    onChangeFilters(name, color.hex);
+                  }}
+                  colorPickerCoordinates={{
+                    left: 360,
+                  }}
+                  wrapperRef={topSearchWrapperRef}
+                />
+                <Search.DropDown
+                  title={'너비'}
+                  name={'lineWidth'}
+                  codeUpper={'10040'}
+                  value={filters.lineWidth}
+                  onChange={(name, value) => {
+                    onChangeFilters(name, Number(value));
+                  }}
+                />
+
                 <dl>
-                  <dt>
-                    <label>{'뒤로(혹은 앞으로)가기'}</label>
-                  </dt>
                   <dd>
                     <div className={`formBox`}>
                       <div style={{ padding: '3px' }}>
@@ -220,11 +218,35 @@ const ImgEditPop = ({ open, onClose, imgProps, onFileIsExportedByConf }: ImgEdit
                         {/*/>*/}
                         <button
                           className="btn btn_primary"
+                          title="뒤로"
+                          aria-label="뒤로"
+                          style={{
+                            width: '36px',
+                            height: '36px',
+                            borderRadius: '50%',
+                            padding: 0,
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
                           onClick={() => {
                             canvasByKonvaRef.current!.customs.api.undo();
                           }}
                         >
-                          뒤로
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M3 7v6h6" />
+                            <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
+                          </svg>
                         </button>
                       </div>
                       <div style={{ padding: '3px' }}>
@@ -237,11 +259,35 @@ const ImgEditPop = ({ open, onClose, imgProps, onFileIsExportedByConf }: ImgEdit
                         {/*/>*/}
                         <button
                           className="btn btn_primary"
+                          title="앞으로"
+                          aria-label="앞으로"
+                          style={{
+                            width: '36px',
+                            height: '36px',
+                            borderRadius: '50%',
+                            padding: 0,
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
                           onClick={() => {
                             canvasByKonvaRef.current!.customs.api.redo();
                           }}
                         >
-                          앞으로
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M21 7v6h-6" />
+                            <path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13" />
+                          </svg>
                         </button>
                       </div>
                     </div>

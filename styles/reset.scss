@@ -133,3 +133,12 @@ button, input, optgroup, select, textarea {
   font-weight: 700;
   font-style: normal;
 }
+
+/* 감자꽃(Gamja Flower) 손글씨 웹폰트 - 이미지 편집기 텍스트용 (OFL) */
+@font-face {
+  font-family: "GamjaFlower";
+  src: url("../public/fonts/GamjaFlower-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

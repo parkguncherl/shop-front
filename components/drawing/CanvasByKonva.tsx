@@ -285,7 +285,7 @@ const EditableText = ({ textInfo, onMouseDown, onDragEnd, onEditEnd, onChangeByE
         scaleX={textInfo?.scaleX}
         scaleY={textInfo?.scaleY}
         rotation={textInfo?.rotation}
-        fontFamily={'NotoSansKR'} // reset.scss 이하 NotoSansKR family에 의존
+        fontFamily={'GamjaFlower'} // reset.scss 이하 GamjaFlower(감자꽃) family에 의존
         fontStyle={`${textInfo.style?.weight || ''}`}
         draggable={!enablePreviewMode}
         onMouseDown={onMouseDown}
@@ -540,6 +540,20 @@ const CanvasByKonva = ({
 
   const [undoImg] = useImage(icoUndo.src);
   const [redoImg] = useImage(icoRedo.src);
+
+  // GamjaFlower(감자꽃) 웹폰트는 canvas 렌더링 전에 로드되어 있어야 하므로,
+  // 폰트 로드 완료 시점에 stage를 강제로 다시 그린다(폴백 폰트로 그려지는 문제 방지).
+  useEffect(() => {
+    if (typeof document === 'undefined' || !(document as any).fonts) return;
+    (document as any).fonts
+      .load('20px GamjaFlower')
+      .then(() => {
+        stageRef.current?.batchDraw();
+      })
+      .catch(() => {
+        /* 폰트 로드 실패 시 폴백 폰트 유지 */
+      });
+  }, []);
 
   const commitTextInfo = (textInfos: TextInfo[]) => {
     pushHistory({
