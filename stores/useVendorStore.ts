@@ -18,6 +18,8 @@ export type VendorCreateRequest = {
   phoneNo?: string | null;
   phoneNo2?: string | null;
   kakaoId?: string | null;
+  kakaoStoryId?: string | null;
+  instaId?: string | null;
   etcInfo?: string | null;
 };
 

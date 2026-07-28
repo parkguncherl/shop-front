@@ -11,9 +11,11 @@ import PopupFormType from '@/components/popup/content/PopupFormType';
 import FormInput from '@/components/form/FormInput';
 import { toastError, toastSuccess } from '@/components/ToastMessage';
 import { useVendorStore } from '@/stores';
+import { VendorMngResponseVendorPagingInfo } from '@/generated';
 
 interface Props {
   open: boolean;
+  item: VendorMngResponseVendorPagingInfo;
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -29,34 +31,45 @@ interface FormFields {
   etcInfo?: string;
 }
 
-const DEFAULTS: FormFields = { vendorNm: '', location: '', phoneNo: '', phoneNo2: '', kakaoId: '', kakaoStoryId: '', instaId: '', etcInfo: '' };
-
-const VendorMngAddPop = ({ open, onClose, onSuccess }: Props) => {
-  const createVendor = useVendorStore((s) => s.createVendor);
-  const { control, handleSubmit, reset } = useForm<FormFields>({ defaultValues: DEFAULTS });
+const VendorMngModPop = ({ open, item, onClose, onSuccess }: Props) => {
+  const updateVendor = useVendorStore((s) => s.updateVendor);
+  const { control, handleSubmit, reset } = useForm<FormFields>({
+    defaultValues: { vendorNm: '', location: '', phoneNo: '', phoneNo2: '', kakaoId: '', kakaoStoryId: '', instaId: '', etcInfo: '' },
+  });
 
   useEffect(() => {
-    if (!open) reset(DEFAULTS);
-  }, [open]);
+    if (!open) return;
+    reset({
+      vendorNm: item.vendorNm ?? '',
+      location: item.location ?? '',
+      phoneNo: item.phoneNo ?? '',
+      phoneNo2: item.phoneNo2 ?? '',
+      kakaoId: item.kakaoId ?? '',
+      kakaoStoryId: (item as any).kakaoStoryId ?? '',
+      instaId: (item as any).instaId ?? '',
+      etcInfo: item.etcInfo ?? '',
+    });
+  }, [open, item]);
 
   const handleClose = () => onClose();
 
   const onValid: SubmitHandler<FormFields> = async (form) => {
-    const { data } = await createVendor({
+    const { data } = await updateVendor({
+      id: item.id as number,
       vendorNm: form.vendorNm,
-      location: form.location || null,
-      phoneNo: form.phoneNo || null,
-      phoneNo2: form.phoneNo2 || null,
-      kakaoId: form.kakaoId || null,
-      kakaoStoryId: form.kakaoStoryId || null,
-      instaId: form.instaId || null,
-      etcInfo: form.etcInfo || null,
+      location: form.location ?? '',
+      phoneNo: form.phoneNo ?? '',
+      phoneNo2: form.phoneNo2 ?? '',
+      kakaoId: form.kakaoId ?? '',
+      kakaoStoryId: form.kakaoStoryId ?? '',
+      instaId: form.instaId ?? '',
+      etcInfo: form.etcInfo ?? '',
     });
     if (data?.resultCode === 200) {
-      toastSuccess('등록되었습니다.');
+      toastSuccess('수정되었습니다.');
       onSuccess();
     } else {
-      toastError(data?.resultMessage ?? '등록 중 오류가 발생했습니다.');
+      toastError(data?.resultMessage ?? '수정 중 오류가 발생했습니다.');
     }
   };
 
@@ -65,16 +78,20 @@ const VendorMngAddPop = ({ open, onClose, onSuccess }: Props) => {
       width={600}
       open={open}
       isEscClose={true}
-      title="협력업체 등록"
+      title="협력업체 수정"
       onClose={handleClose}
       footer={
         <PopupFooter>
           <div className="btnArea between">
             <div className="left">
-              <button className="btn btn_primary" onClick={handleSubmit(onValid, () => toastError('필수 항목을 확인해주세요.'))}>저장</button>
+              <button className="btn btn_primary" onClick={handleSubmit(onValid, () => toastError('필수 항목을 확인해주세요.'))}>
+                저장
+              </button>
             </div>
             <div className="right">
-              <button className="btn" onClick={handleClose}>닫기</button>
+              <button className="btn" onClick={handleClose}>
+                닫기
+              </button>
             </div>
           </div>
         </PopupFooter>
@@ -114,4 +131,4 @@ const VendorMngAddPop = ({ open, onClose, onSuccess }: Props) => {
   );
 };
 
-export default VendorMngAddPop;
+export default VendorMngModPop;

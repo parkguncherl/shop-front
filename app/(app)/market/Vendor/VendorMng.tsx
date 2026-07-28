@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { CellEditRequestEvent, CellStyle, ColDef } from 'ag-grid-community';
+import React, { useEffect, useMemo, useState } from 'react';
+import { CellStyle, ColDef } from 'ag-grid-community';
 import { Search, Table, TableHeader, Title } from '@/components';
 import { toastError, toastSuccess } from '@/components';
 import { useCommonStore, useVendorStore } from '@/stores';
@@ -14,12 +14,10 @@ import TunedGrid from '@/components/grid/TunedGrid';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import VendorMngAddPop from '@/components/popup/market/vendor/VendorMngAddPop';
+import VendorMngModPop from '@/components/popup/market/vendor/VendorMngModPop';
 import ImageZoomPop from '@/components/popup/common/ImageZoomPop';
 import { VendorProductResponse } from '@/generated';
 import { VendorMngResponseVendorPagingInfo } from '@/generated';
-
-// 그리드에서 바로 수정 가능한 컬럼 (명칭 ~ 기타정보, 등록자 이전까지)
-const INLINE_EDITABLE = new Set(['vendorNm', 'location', 'phoneNo', 'phoneNo2', 'kakaoId', 'etcInfo']);
 
 type VendorProductResponseWithImg = VendorProductResponse & { imgUrl?: string };
 
@@ -40,10 +38,10 @@ const VendorMng = () => {
   const setDelOpen = useVendorStore((s) => s.setDelOpen);
   const fetchVendors = useVendorStore((s) => s.fetchVendors);
   const fetchVendorProducts = useVendorStore((s) => s.fetchVendorProducts);
-  const updateVendor = useVendorStore((s) => s.updateVendor);
   const deleteVendor = useVendorStore((s) => s.deleteVendor);
 
   const [rowData, setRowData] = useState<VendorMngResponseVendorPagingInfo[]>([]);
+  const [modOpen, setModOpen] = useState(false); // 수정 팝업
   const queryClient = useQueryClient();
 
   const {
@@ -135,47 +133,6 @@ const VendorMng = () => {
     },
   });
 
-  // 그리드 셀 인라인 수정 - id 와 변경된 필드만 전송
-  const { mutate: updateVendorMutate } = useMutation({
-    mutationFn: updateVendor,
-    onSuccess: (e, variables) => {
-      if (e.data.resultCode === 200) {
-        toastSuccess('수정되었습니다.');
-        refetch();
-      } else {
-        toastError(e.data.resultMessage ?? '수정 중 오류가 발생했습니다.');
-      }
-    },
-    onError: () => {
-      toastError('수정 중 오류가 발생했습니다.');
-    },
-  });
-
-  // readOnlyEdit 모드: ag-grid가 행 객체(frozen)에 직접 대입하지 않고 요청만 발생 -> 우리가 직접 갱신
-  const onCellEditRequest = useCallback(
-    (event: CellEditRequestEvent<VendorMngResponseVendorPagingInfo>) => {
-      const field = event.column.getColId();
-      if (!INLINE_EDITABLE.has(field)) return;
-
-      const id = event.data?.id;
-      if (!id) return;
-
-      const newValue = typeof event.newValue === 'string' ? event.newValue.trim() : event.newValue;
-
-      // 명칭은 필수값 - 비우면 무시
-      if (field === 'vendorNm' && (newValue == null || newValue === '')) {
-        toastError('명칭은 필수 항목입니다.');
-        return;
-      }
-
-      // 로컬 rowData 즉시 반영 (새 객체로 교체)
-      setRowData((prev) => prev.map((row) => (row.id === id ? { ...row, [field]: newValue } : row)));
-      // id 와 변경된 필드만 전송
-      updateVendorMutate({ id, [field]: newValue ?? '' });
-    },
-    [updateVendorMutate],
-  );
-
   const columnDefs: ColDef<VendorMngResponseVendorPagingInfo>[] = [
     {
       headerName: 'No',
@@ -188,26 +145,23 @@ const VendorMng = () => {
     },
     {
       field: 'vendorNm',
-      headerName: '명칭✎',
+      headerName: '명칭',
       minWidth: 90,
       maxWidth: 90,
-      editable: true,
       suppressHeaderMenuButton: true,
     },
     {
       field: 'location',
-      headerName: '위치✎',
+      headerName: '위치',
       minWidth: 140,
       maxWidth: 140,
-      editable: true,
       suppressHeaderMenuButton: true,
     },
     {
       field: 'prodCnt',
       headerName: '등록',
-      minWidth: 40,
-      maxWidth: 40,
-      editable: true,
+      minWidth: 36,
+      maxWidth: 36,
       suppressHeaderMenuButton: true,
       cellRenderer: 'NUMBER_COMMA',
       cellStyle: GridSetting.CellStyle.RIGHT,
@@ -215,9 +169,8 @@ const VendorMng = () => {
     {
       field: 'oneMonthsellCnt',
       headerName: '1/M',
-      minWidth: 40,
-      maxWidth: 40,
-      editable: true,
+      minWidth: 37,
+      maxWidth: 37,
       suppressHeaderMenuButton: true,
       cellRenderer: 'NUMBER_COMMA',
       cellStyle: GridSetting.CellStyle.RIGHT,
@@ -225,48 +178,135 @@ const VendorMng = () => {
     {
       field: 'threeMonthsellCnt',
       headerName: '3/M',
-      minWidth: 40,
-      maxWidth: 40,
-      editable: true,
+      minWidth: 38,
+      maxWidth: 38,
       suppressHeaderMenuButton: true,
       cellRenderer: 'NUMBER_COMMA',
       cellStyle: GridSetting.CellStyle.RIGHT,
     },
     {
       field: 'phoneNo',
-      headerName: '연락처✎',
+      headerName: '연락처',
       minWidth: 100,
       maxWidth: 100,
-      editable: true,
       cellStyle: GridSetting.CellStyle.CENTER,
       suppressHeaderMenuButton: true,
     },
     {
       field: 'phoneNo2',
-      headerName: '연락처2✎',
+      headerName: '연락처2',
       minWidth: 100,
       maxWidth: 100,
-      editable: true,
       cellStyle: GridSetting.CellStyle.CENTER,
       suppressHeaderMenuButton: true,
       hide: true,
     },
     {
       field: 'kakaoId',
-      headerName: '카톡ID✎',
+      headerName: '카톡ID',
       minWidth: 100,
       maxWidth: 100,
-      editable: true,
       cellStyle: GridSetting.CellStyle.CENTER,
       suppressHeaderMenuButton: true,
     },
     {
       field: 'etcInfo',
-      headerName: '기타정보✎',
+      headerName: '기타정보',
       minWidth: 100,
       maxWidth: 100,
-      editable: true,
       suppressHeaderMenuButton: true,
+    },
+    {
+      headerName: 'STORY',
+      colId: 'story',
+      minWidth: 55,
+      maxWidth: 55,
+      cellStyle: GridSetting.CellStyle.CENTER,
+      suppressHeaderMenuButton: true,
+      // 카카오스토리 아이콘 버튼 - 항상 표시하되, kakao_story_id 없으면 disable
+      cellRenderer: (p: { data?: VendorMngResponseVendorPagingInfo; node?: { isRowPinned: () => boolean } }) => {
+        if (p.node?.isRowPinned()) return null;
+        const storyId = (p.data as any)?.kakaoStoryId as string | undefined;
+        return (
+          <button
+            type="button"
+            disabled={!storyId}
+            title={storyId ? '카카오스토리 열기' : '카카오스토리 ID 없음'}
+            onClick={() => storyId && window.open(`https://story.kakao.com/${storyId}`, '_blank', 'noopener,noreferrer')}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 24,
+              height: 24,
+              padding: 0,
+              border: 'none',
+              background: 'transparent',
+              cursor: storyId ? 'pointer' : 'not-allowed',
+              opacity: storyId ? 1 : 0.35,
+            }}
+          >
+            {/* 카카오스토리 아이콘 (옐로우 라운드 + 화이트 하트) */}
+            <svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg" aria-label="카카오스토리">
+              <rect x="1" y="1" width="20" height="20" rx="6" fill="#FEE500" />
+              <path
+                d="M11 16.2C7.4 13.5 5.2 11.1 5.2 8.7 5.2 7 6.5 5.8 8.1 5.8c1 0 1.9 0.5 2.9 1.7 1-1.2 1.9-1.7 2.9-1.7 1.6 0 2.9 1.2 2.9 2.9 0 2.4-2.2 4.8-5.8 7.5z"
+                fill="#3A1D1D"
+              />
+            </svg>
+          </button>
+        );
+      },
+    },
+    {
+      headerName: 'INSTA',
+      colId: 'insta',
+      minWidth: 55,
+      maxWidth: 55,
+      cellStyle: GridSetting.CellStyle.CENTER,
+      suppressHeaderMenuButton: true,
+      // 인스타그램 아이콘 버튼 - 항상 표시하되, insta_id 없으면 disable
+      cellRenderer: (p: { data?: VendorMngResponseVendorPagingInfo; node?: { isRowPinned: () => boolean } }) => {
+        if (p.node?.isRowPinned()) return null;
+        const instaId = (p.data as any)?.instaId as string | undefined;
+        return (
+          <button
+            type="button"
+            disabled={!instaId}
+            title={instaId ? '인스타그램 열기' : '인스타그램 ID 없음'}
+            onClick={() => instaId && window.open(`https://www.instagram.com/${instaId}`, '_blank', 'noopener,noreferrer')}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 24,
+              height: 24,
+              padding: 0,
+              border: 'none',
+              background: 'transparent',
+              cursor: instaId ? 'pointer' : 'not-allowed',
+              opacity: instaId ? 1 : 0.35,
+            }}
+          >
+            {/* 인스타그램 아이콘 (그라디언트 라운드 + 카메라) */}
+            <svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg" aria-label="인스타그램">
+              <defs>
+                <linearGradient id="igGrad" x1="0" y1="1" x2="1" y2="0">
+                  <stop offset="0" stopColor="#FEDA75" />
+                  <stop offset="0.35" stopColor="#FA7E1E" />
+                  <stop offset="0.6" stopColor="#D62976" />
+                  <stop offset="0.8" stopColor="#962FBF" />
+                  <stop offset="1" stopColor="#4F5BD5" />
+                </linearGradient>
+              </defs>
+              <rect x="1" y="1" width="20" height="20" rx="6" fill="url(#igGrad)" />
+              <rect x="6" y="6" width="10" height="10" rx="3.2" fill="none" stroke="#fff" strokeWidth="1.6" />
+              <circle cx="11" cy="11" r="2.6" fill="none" stroke="#fff" strokeWidth="1.6" />
+              <circle cx="15" cy="7" r="1" fill="#fff" />
+            </svg>
+          </button>
+        );
+      },
     },
   ];
 
@@ -366,7 +406,7 @@ const VendorMng = () => {
       <div className="tblPreview">
         <div className="layoutBox">
           {/* 좌: 협력업체 목록 */}
-          <div className="layout55">
+          <div className="layout60">
             <Table>
               <TableHeader count={rowData.length} search={refetch}></TableHeader>
               <TunedGrid<VendorMngResponseVendorPagingInfo>
@@ -381,9 +421,6 @@ const VendorMng = () => {
                 noRowsOverlayComponent={CustomNoRowsOverlay}
                 className="default check"
                 rowSelection={{ mode: 'singleRow', enableClickSelection: true }}
-                readOnlyEdit
-                stopEditingWhenCellsLoseFocus
-                onCellEditRequest={onCellEditRequest}
                 onRowClicked={(e) => {
                   if (e.node.isRowPinned()) return;
                   setSelectedVendor(e.data ?? null);
@@ -393,7 +430,7 @@ const VendorMng = () => {
           </div>
 
           {/* 우: 선택한 협력업체의 상품목록 */}
-          <div className="layout45">
+          <div className="layout40">
             <Table>
               <TableHeader
                 count={productRowData.length}
@@ -419,6 +456,9 @@ const VendorMng = () => {
             <button className="btn btn_primary" onClick={() => setAddOpen(true)}>
               등록
             </button>
+            <button className="btn btn_default" onClick={() => setModOpen(true)} disabled={!selectedVendor}>
+              수정
+            </button>
             <button className="btn btn_danger" onClick={() => setDelOpen(true)} disabled={!selectedVendor}>
               삭제
             </button>
@@ -434,6 +474,18 @@ const VendorMng = () => {
           queryClient.invalidateQueries({ queryKey: ['/partnerVendorMng/list'] });
         }}
       />
+
+      {selectedVendor && (
+        <VendorMngModPop
+          open={modOpen}
+          item={selectedVendor}
+          onClose={() => setModOpen(false)}
+          onSuccess={() => {
+            setModOpen(false);
+            queryClient.invalidateQueries({ queryKey: ['/partnerVendorMng/list'] });
+          }}
+        />
+      )}
 
       <ConfirmModal
         open={delOpen}
