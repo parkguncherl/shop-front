@@ -83,7 +83,7 @@ const ProductMng = () => {
     prodNm: undefined,
     partnerId: undefined,
     vendorId: undefined,
-    showYn: undefined,
+    showYn: 'Y', // 기본값: 전시
   });
 
   /** 계절 버튼 — 버튼마다 독립 boolean state (체크박스처럼 다중 선택) */

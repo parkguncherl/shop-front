@@ -153,8 +153,8 @@ const VendorMng = () => {
     {
       field: 'location',
       headerName: '위치',
-      minWidth: 140,
-      maxWidth: 140,
+      minWidth: 100,
+      maxWidth: 100,
       suppressHeaderMenuButton: true,
     },
     {
@@ -187,16 +187,16 @@ const VendorMng = () => {
     {
       field: 'phoneNo',
       headerName: '연락처',
-      minWidth: 100,
-      maxWidth: 100,
+      minWidth: 95,
+      maxWidth: 95,
       cellStyle: GridSetting.CellStyle.CENTER,
       suppressHeaderMenuButton: true,
     },
     {
       field: 'phoneNo2',
       headerName: '연락처2',
-      minWidth: 100,
-      maxWidth: 100,
+      minWidth: 80,
+      maxWidth: 80,
       cellStyle: GridSetting.CellStyle.CENTER,
       suppressHeaderMenuButton: true,
       hide: true,
@@ -219,8 +219,8 @@ const VendorMng = () => {
     {
       headerName: 'STORY',
       colId: 'story',
-      minWidth: 55,
-      maxWidth: 55,
+      minWidth: 50,
+      maxWidth: 50,
       cellStyle: GridSetting.CellStyle.CENTER,
       suppressHeaderMenuButton: true,
       // 카카오스토리 아이콘 버튼 - 항상 표시하되, kakao_story_id 없으면 disable
@@ -261,8 +261,8 @@ const VendorMng = () => {
     {
       headerName: 'INSTA',
       colId: 'insta',
-      minWidth: 55,
-      maxWidth: 55,
+      minWidth: 50,
+      maxWidth: 50,
       cellStyle: GridSetting.CellStyle.CENTER,
       suppressHeaderMenuButton: true,
       // 인스타그램 아이콘 버튼 - 항상 표시하되, insta_id 없으면 disable

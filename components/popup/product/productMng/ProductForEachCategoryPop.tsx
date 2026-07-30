@@ -24,6 +24,8 @@ import { PARTNER_CODE } from '@/libs/const';
 import { usePartnerCodeStore } from '@/stores/usePartnerCodeStore';
 import { useProductMngStore } from '@/stores/product/useProductMngStore';
 import { TableHeader } from '@/components';
+import ProductModPop from '@/components/popup/product/productMng/ProductModPop';
+import { ProductMngResponseProductInfo } from '@/generated';
 
 // interface ConfirmModalProps {
 //   type: 'ADD_TO_CATEGORY' | 'DEL_FROM_CATEGORY';
@@ -62,6 +64,9 @@ const ProductForEachCategoryPop = ({ open, onClose }: ProductContentShowPopProps
   /** 팝업 내부 local state */
   const [productInfoListByCategory, setProductInfoListByCategory] = useState<ProductMngResponseCategoryProductInfo[]>([]);
   const [productInfoListWithExclusion, setProductInfoListWithExclusion] = useState<ProductMngResponseProductInfoByExclusion[]>([]);
+  // 상품 수정 팝업
+  const [modProduct, setModProduct] = useState<ProductMngResponseProductInfo | undefined>(undefined);
+  const [modOpen, setModOpen] = useState(false);
   // const [modalsStatus, setModalsStatus] = useState<ConfForAddToCategory | ConfForDelFromCategory>({
   //   type: 'ADD_TO_CATEGORY',
   //   active: false,
@@ -466,6 +471,23 @@ const ProductForEachCategoryPop = ({ open, onClose }: ProductContentShowPopProps
                 >
                   추가
                 </button>
+                <button
+                  className={`btn`}
+                  onClick={() => {
+                    // 좌/우 그리드 중 선택된 상품으로 수정 팝업 열기 (전체목록 우선 - 전체 필드 보유)
+                    const rightSel = (RefForRightGrid.current?.api.getSelectedRows() ?? [])[0];
+                    const leftSel = (RefForLeftGrid.current?.api.getSelectedRows() ?? [])[0];
+                    const sel = rightSel ?? leftSel;
+                    if (!sel) {
+                      toastError('상품을 한 건 선택해주세요.');
+                      return;
+                    }
+                    setModProduct(sel as unknown as ProductMngResponseProductInfo);
+                    setModOpen(true);
+                  }}
+                >
+                  상품상세로 이동
+                </button>
               </div>
               <div className="right">
                 <button
@@ -604,6 +626,19 @@ const ProductForEachCategoryPop = ({ open, onClose }: ProductContentShowPopProps
       {/*    });*/}
       {/*  }}*/}
       {/*/>*/}
+
+      {modProduct && (
+        <ProductModPop
+          open={modOpen}
+          productInfo={modProduct}
+          onClose={() => setModOpen(false)}
+          onSuccess={() => {
+            setModOpen(false);
+            productInfosByCategoryRefetch();
+            productInfosWithExclusionRefetch();
+          }}
+        />
+      )}
     </div>
   );
 };
