@@ -16,13 +16,30 @@ interface Props {
   isNotEmptyOption?: boolean;
   //onKeyDown?: (event: React.KeyboardEvent) => void;
   ref?: React.Ref<ReactSelectorInterface>;
+  // ── 멀티 셀렉트(콤보 다중선택) 모드 ──
+  isMulti?: boolean;
+  multiValues?: (string | number)[]; // 선택된 값 목록
+  onChangeMulti?: (values: (string | number)[]) => void; // 선택 변경 시 값 배열 전달
 }
 
 export interface ReactSelectorInterface {
   reactSelectorReset: () => void;
 }
 
-export const TunedReactSelector = ({ title, name, values, placeholder, options = [], onChange, required, onErased, ref }: Props) => {
+export const TunedReactSelector = ({
+  title,
+  name,
+  values,
+  placeholder,
+  options = [],
+  onChange,
+  required,
+  onErased,
+  ref,
+  isMulti,
+  multiValues,
+  onChangeMulti,
+}: Props) => {
   const selectRef = useRef<SelectInstance>(null);
   const memoizedOptions = useMemo(() => {
     console.log('TunedReactSelector option ==>', options);
@@ -130,7 +147,61 @@ export const TunedReactSelector = ({ title, name, values, placeholder, options =
         ? state.isSelected ? dk.selectedText : dk.text
         : state.isSelected ? '#fff' : provided.color,
     }),
+    // 멀티 선택 칩
+    multiValue: (provided: any) => ({
+      ...provided,
+      ...(isDark && { backgroundColor: dk.selected }),
+    }),
+    multiValueLabel: (provided: any) => ({
+      ...provided,
+      fontSize: '12px',
+      ...(isDark && { color: dk.selectedText }),
+    }),
+    multiValueRemove: (provided: any) => ({
+      ...provided,
+      ...(isDark && { color: dk.selectedText }),
+    }),
   };
+
+  // 멀티 모드: 값 배열 기반으로 react-select 를 그대로 사용
+  const selectedMulti = useMemo(
+    () => (memoizedOptions ?? []).filter((o) => (multiValues ?? []).map(String).includes(String(o.value))),
+    [memoizedOptions, multiValues],
+  );
+
+  const renderMultiSelect = () => (
+    <ClientSidedReactSelect
+      isMulti
+      closeMenuOnSelect={false}
+      value={selectedMulti}
+      onChange={(vals: unknown) => {
+        const arr = (vals as DropDownOption[]) ?? [];
+        onChangeMulti?.(arr.map((o) => o.value as string | number));
+      }}
+      options={memoizedOptions || []}
+      isSearchable
+      name={name}
+      placeholder={placeholder}
+      className="list"
+      styles={{
+        ...customStyles,
+        // 칩이 여러 개면 높이가 늘어야 하므로 고정 높이 해제
+        control: (provided: any) => ({
+          ...provided,
+          minHeight: '30px',
+          boxSizing: 'border-box',
+          fontSize: '13px',
+          ...(isDark && { backgroundColor: dk.bg, borderColor: dk.border, boxShadow: 'none' }),
+        }),
+        valueContainer: (provided: any) => ({ ...provided, padding: '2px 6px' }),
+        indicatorsContainer: (provided: any) => ({ ...provided }),
+      }}
+      menuPortalTarget={typeof document !== 'undefined' ? document.body : null}
+      menuPosition="fixed"
+      menuShouldScrollIntoView={false}
+      noOptionsMessage={() => '검색 결과가 없습니다.'}
+    />
+  );
 
   const onInputChange = useCallback((newValue: string, actionMeta: InputActionMeta) => {
     if (actionMeta.action == 'input-change') {
@@ -163,6 +234,20 @@ export const TunedReactSelector = ({ title, name, values, placeholder, options =
     },
     [onErased],
   );
+
+  if (isMulti) {
+    return title ? (
+      <dl>
+        <dt>
+          <label>{title}</label>
+          {required && <span className={'req'}>*</span>}
+        </dt>
+        <dd>{renderMultiSelect()}</dd>
+      </dl>
+    ) : (
+      renderMultiSelect()
+    );
+  }
 
   return (
     <>

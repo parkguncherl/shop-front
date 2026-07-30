@@ -8,13 +8,15 @@ import PopupFormType from '@/components/popup/content/PopupFormType';
 import FormInput from '@/components/form/FormInput';
 import { Controller, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { TunedReactSelector } from '@/components/TunedReactSelector';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { YupSchema } from '@/libs';
 import { toastError, toastSuccess } from '@/components/ToastMessage';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { ProductMngRequestUpdateProduct, ProductMngResponseProductInfo } from '@/generated';
 import { useProductMngStore } from '@/stores/product/useProductMngStore';
+import { usePartnerCodeStore } from '@/stores/usePartnerCodeStore';
+import { PARTNER_CODE } from '@/libs/const';
 import FormDropDown from '@/components/form/FormDropDown';
 import FormDatePicker from '@/components/form/FormDatePicker';
 import dayjs from 'dayjs';
@@ -23,6 +25,8 @@ import { useVendorList } from '@/customHook/useVendorList';
 /** form 영역 입력 인터페이스 */
 export interface ProductModFields extends ProductMngRequestUpdateProduct {
   weather: ('spring' | 'summer' | 'autumn' | 'winter')[];
+  /** 연결할 카테고리 id 목록 (멱등적 추가) */
+  categoryIds?: number[];
 }
 
 interface ProductContentShowPopProps {
@@ -43,6 +47,21 @@ const ProductModPop = ({ open, onClose, onSuccess, productInfo }: ProductContent
   const vendorList = useVendorList();
   const updateProduct = useProductMngStore((s) => s.updateProduct);
   const deleteProduct = useProductMngStore((s) => s.deleteProduct);
+  const { selectLowerPartnerCodeByCodeUpper } = usePartnerCodeStore();
+
+  /** 카테고리 목록 */
+  const { data: categoriesData } = useQuery({
+    queryKey: ['partnerCode', PARTNER_CODE.categories.code],
+    queryFn: () => selectLowerPartnerCodeByCodeUpper(PARTNER_CODE.categories.code, ''),
+    enabled: open,
+    staleTime: 60_000,
+  });
+
+  const categoryOptions = (categoriesData?.data?.body ?? []).map((c: any) => ({
+    key: String(c.id),
+    value: c.id,
+    label: c.codeNm,
+  }));
 
   /** 팝업 내부 local state */
   const [openModConf, setOpenAddConf] = useState<{ open: boolean; stored?: ProductMngRequestUpdateProduct }>({ open: false });
@@ -262,9 +281,22 @@ const ProductModPop = ({ open, onClose, onSuccess, productInfo }: ProductContent
                   placeholder={'선택'}
                 />
               </PopupFormType>
-              {/* 두께/신축성/비침/세탁/안감 — 임시 숨김 */}
-              <PopupFormType className={'type_2'}>
+              <PopupFormType className={'type2'}>
                 <FormInput<ProductModFields> control={control} name={'composition'} label={'혼용율'} />
+                <Controller
+                  control={control}
+                  name={'categoryIds'}
+                  render={({ field }) => (
+                    <TunedReactSelector
+                      title={'카테고리 추가'}
+                      isMulti
+                      placeholder={'선택 (복수 가능)'}
+                      options={categoryOptions}
+                      multiValues={field.value ?? []}
+                      onChangeMulti={(vals) => field.onChange(vals.map((v) => Number(v)))}
+                    />
+                  )}
+                />
               </PopupFormType>
               {/* 신상번호 + 등록일자 — 두 칸(type2) 배치 */}
               <PopupFormType className={'type2'}>

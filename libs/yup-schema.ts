@@ -261,7 +261,7 @@ export const YupSchema = {
         showYn: yup.string().notRequired(),
       }),
 
-      categoryId: yup.number().notRequired(),
+      categoryIds: yup.array().of(yup.number().required()).notRequired(),
 
       productDet: yup
         .object({
@@ -300,6 +300,7 @@ export const YupSchema = {
       transTp: yup.string().notRequired(),
       detInfo: yup.string().notRequired(),
       showYn: yup.string().notRequired(),
+      categoryIds: yup.array().of(yup.number().required()).notRequired(),
     }) as yup.ObjectSchema<ProductModFields>,
 
   InsertProductDetRequest: (): yup.ObjectSchema<ProductMngRequestInsertProductDet> =>

@@ -31,7 +31,7 @@ export interface ProductInfoCreateFields {
   id?: number;
   product?: ProductCreateFields;
   productDet: ProductMngRequestInsertProductDet;
-  categoryId?: number;
+  categoryIds?: number[];
 }
 
 interface ProductContentShowPopProps {
@@ -196,8 +196,8 @@ const ProductInfoAddPop = ({ open, onClose, onSuccess, productInfo, sizeInfo }: 
         };
       }
 
-      if (data.categoryId) {
-        (insertProductInfoReqObj as any).categoryId = data.categoryId;
+      if (data.categoryIds && data.categoryIds.length > 0) {
+        (insertProductInfoReqObj as any).categoryIds = data.categoryIds.map((c) => Number(c));
       }
       setOpenAddConf({
         open: true,
@@ -306,12 +306,19 @@ const ProductInfoAddPop = ({ open, onClose, onSuccess, productInfo, sizeInfo }: 
                 {/* 두께/신축성/비침/세탁/안감 — 임시 숨김 */}
                 <PopupFormType className={'type2'}>
                   <FormInput<ProductInfoCreateFields> control={control} name={'product.composition'} label={'혼용율'} required />
-                  <FormDropDown<ProductInfoCreateFields>
+                  <Controller
                     control={control}
-                    name={'categoryId'}
-                    title={'카테고리'}
-                    options={categoryOptions}
-                    placeholder={'선택'}
+                    name={'categoryIds'}
+                    render={({ field }) => (
+                      <TunedReactSelector
+                        title={'카테고리'}
+                        isMulti
+                        placeholder={'선택 (복수 가능)'}
+                        options={categoryOptions}
+                        multiValues={field.value ?? []}
+                        onChangeMulti={(vals) => field.onChange(vals.map((v) => Number(v)))}
+                      />
+                    )}
                   />
                 </PopupFormType>
                 {/* 신상번호 + 등록일자 — 두 칸(type2) 배치 */}
