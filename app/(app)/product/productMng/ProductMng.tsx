@@ -26,9 +26,9 @@ import ProductModPop from '@/components/popup/product/productMng/ProductModPop';
 import ProductDetInfoPop from '@/components/popup/product/productMng/ProductDetInfoPop';
 import { usePartnerCodeStore } from '@/stores/usePartnerCodeStore';
 import { usePartnerList } from '@/customHook/usePartnerList';
+import { usePartnerCodeList } from '@/customHook/usePartnerCodeList';
 import { PartnerCodePop } from '@/components/popup/system/PartnerCodePop';
 import { ConfirmModal } from '@/components/ConfirmModal';
-import ProductForEachCategoryPop from '@/components/popup/product/productMng/ProductForEachCategoryPop';
 import ImageZoomPop from '@/components/popup/common/ImageZoomPop';
 import ImgEditPop, { ImgPropsOnEditPop } from '@/components/popup/common/ImgEditPop';
 import { useVendorList } from '@/customHook/useVendorList';
@@ -83,8 +83,14 @@ const ProductMng = () => {
     prodNm: undefined,
     partnerId: undefined,
     vendorId: undefined,
+    categoryId: undefined,
     showYn: 'Y', // 기본값: 전시
   });
+
+  /** 카테고리(P0001) 검색용 드롭다운 옵션 (+ 코드에 없는 '미등록' 항목을 화면에서 추가) */
+  const { data: categoryCodeOptions = [] } = usePartnerCodeList({ codeUpper: PARTNER_CODE.categories.code });
+  // categoryId = -1 은 '어떤 카테고리에도 등록되지 않은 상품' 을 의미하는 sentinel 값
+  const categoryOptions = useMemo(() => [...categoryCodeOptions, { key: '-1', value: -1, label: '미등록' }], [categoryCodeOptions]);
 
   /** 계절 버튼 — 버튼마다 독립 boolean state (체크박스처럼 다중 선택) */
   const [isSpring, setIsSpring] = useState(false);
@@ -240,6 +246,7 @@ const ProductMng = () => {
       {
         partnerId: filters.partnerId,
         vendorId: filters.vendorId,
+        categoryId: filters.categoryId,
         showYn: filters.showYn,
         prodNm: filters.prodNm,
         // 계절 선택은 즉시 재조회되도록 키에 포함
@@ -652,6 +659,15 @@ const ProductMng = () => {
       <Title title={upMenuNm && menuNm ? `${menuNm}` : ''} />
       <Search className="type_2">
         <Search.DropDown
+          title={'카테고리'}
+          name={'categoryId'}
+          value={filters.categoryId}
+          onChange={(_name, value) => onChangeFilters('categoryId', value ? Number(value) : undefined)}
+          defaultOptions={categoryOptions}
+          showAll={true}
+          dropDownStyle={{ width: '120px' }}
+        />
+        <Search.DropDown
           title={'협력업체'}
           name={'vendorId'}
           value={filters.vendorId}
@@ -687,7 +703,8 @@ const ProductMng = () => {
                   onClick={s.toggle}
                   style={{
                     height: 30,
-                    padding: '0 14px',
+                    padding: '0 8px',
+                    minWidth: 34,
                     fontSize: 13,
                     borderRadius: 3,
                     cursor: 'pointer',
@@ -752,14 +769,6 @@ const ProductMng = () => {
                     }}
                   >
                     카테고리
-                  </button>
-                  <button
-                    className={'btn btn_primary'}
-                    onClick={() => {
-                      openModal('PROD_BY_CATEGORY');
-                    }}
-                  >
-                    카테고리별상품
                   </button>
                 </div>
                 <div className="right">
@@ -972,7 +981,6 @@ const ProductMng = () => {
         codeName={PARTNER_CODE.categories.name}
         onCloseRequestEmerged={() => partnerCodeCloseModal('PARTNER_CODE_P0001_OPEN')}
       />
-      <ProductForEachCategoryPop open={modals.type == 'PROD_BY_CATEGORY' && modals.active} onClose={() => closeModal('PROD_BY_CATEGORY')} />
       <ConfirmModal
         open={modals.active && modals.type == 'PROD_DEL'}
         title={`${(modals.stored_temporary as ProductMngResponseProductInfo | undefined)?.prodNm} 을(를) 삭제 하시겠습니까?`}

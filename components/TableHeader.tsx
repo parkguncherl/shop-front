@@ -37,8 +37,8 @@ export const TableHeader = ({
   gridRef,
   isPaging = true,
 }: Props) => {
-  let colPosition = -1;
-  let rowPosition = -1;
+  const colPositionRef = useRef<number>(-1);
+  const rowPositionRef = useRef<number>(-1);
   const [searchText, setSearchText] = useState<string>('');
   //const [searchedRowNum, setSearchedRowNum] = useState<number>(-1);
   //const [searchedColumnNum, setSearchedColumnNum] = useState<number>(0);
@@ -106,15 +106,15 @@ export const TableHeader = ({
               <input
                 ref={inputRef}
                 className={'ant-input'}
-                style={{ width: 225 }} // 글자크기 16자까지 들어가게 대표님 요청
+                style={{ width: 200 }}
                 placeholder={'표 내 검색'}
                 type={'text'}
                 name={'searchText'}
                 autoComplete={'off'}
                 onChange={(e) => {
                   if (searchText !== e.target.value) {
-                    rowPosition = -1;
-                    colPosition = 0;
+                    rowPositionRef.current = -1;
+                    colPositionRef.current = 0;
                     setSearchText(e.target.value);
                   }
                 }}
@@ -146,20 +146,18 @@ export const TableHeader = ({
                       // ★★★
                       let colIndex = -1;
                       const rowIndex = node.rowIndex ? node.rowIndex : 0;
-                      if (allColumns && rowIndex >= rowPosition) {
+                      if (allColumns && rowIndex >= rowPositionRef.current) {
                         for (const colName of allColumns) {
                           // ★★★
                           colIndex++;
                           const field = colName.getColDef().field?.toString();
                           const fieldString = String(node.data[colName.getColDef().field || '']);
                           const isContain = fieldString.indexOf(searchText) > -1;
-                          if (isContain && rowIndex >= rowPosition && colIndex >= colPosition) {
-                            //alert('[' + colPosition + '] colIndex:' + colIndex + '============== [' + colPosition + ']rowIndex:' + rowIndex);
-                            if (rowPosition !== rowIndex || colPosition !== colIndex) {
-                              //alert('===[' + colPosition + '] colIndex:' + colIndex + '============== [' + colPosition + ']rowIndex:' + rowIndex);
+                          if (isContain && rowIndex >= rowPositionRef.current && colIndex >= colPositionRef.current) {
+                            if (rowPositionRef.current !== rowIndex || colPositionRef.current !== colIndex) {
                               // 이전선택건이 아니면
-                              rowPosition = rowIndex;
-                              colPosition = colIndex;
+                              rowPositionRef.current = rowIndex;
+                              colPositionRef.current = colIndex;
                               gridApi.setFocusedCell(rowIndex, field || '');
                               gridApi.ensureNodeVisible(node);
                               inputRef.current?.focus();
@@ -167,14 +165,14 @@ export const TableHeader = ({
                             }
                           }
                         }
-                        colPosition = -1; // row 가 증가하게 될때 col 은 처음부터 다시 찾아야 하기에 초기화
+                        colPositionRef.current = -1; // row 가 증가하게 될때 col 은 처음부터 다시 찾아야 하기에 초기화
                         if (maxLength === rowIndex + 1) {
-                          if (rowPosition > 0 || colPosition > 0) {
+                          if (rowPositionRef.current > 0 || colPositionRef.current > 0) {
                             toastInfo('더 이상 일치하는 데이터가 없습니다.');
                           } else {
                             toastInfo('일치하는 데이터가 없습니다.');
                           }
-                          rowPosition = 0;
+                          rowPositionRef.current = 0;
                           inputRef.current?.focus();
                         }
                       }
