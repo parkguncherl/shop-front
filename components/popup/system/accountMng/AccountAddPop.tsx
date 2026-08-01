@@ -140,15 +140,10 @@ const closeModal = useAccountStore((s) => s.closeModal);
   ];
   useEffect(() => {
     if (initialPartnerList.length > 0) {
-      const defaultOption = initialPartnerList[0]; // 첫 번째 옵션을 기본값으로 사용 (선택)
       setValue('partnerId', 0);
-      setValue('orgPartnerNm', defaultOption.label);
-      setValue('orgPartnerId', defaultOption.key);
     }
     if (authCd <= 399) {
       setValue('partnerId', 0);
-      setValue('orgPartnerNm', null);
-      setValue('orgPartnerId', undefined);
     }
   }, []);
 
@@ -238,31 +233,6 @@ const closeModal = useAccountStore((s) => s.closeModal);
                     required={false}
                   />
                 </PopupFormType>
-                {authCd > 399 ? ( // 화주 이상만(관리자만) 보이게 처리
-                  <PopupFormType className={'type1'}>
-                    <FormDropDown<UserRequestCreate>
-                      control={control}
-                      title={'화주설정'}
-                      name={'orgPartnerNm'}
-                      options={initialPartnerList}
-                      required={false}
-                      onChange={(name, value) => {
-                        // 선택된 label을 사용하여 partnerList에서 key 값을 찾기
-                        const selectedOption: any = partnerList.find((opt: any) => {
-                          return opt.label === value;
-                        });
-                        if (selectedOption) {
-                          // orgPartnerId 업데이트
-                          setValue('orgPartnerId', selectedOption.key);
-                        } else {
-                          setValue('orgPartnerId', 0);
-                        }
-                      }}
-                    />
-                  </PopupFormType>
-                ) : (
-                  ''
-                )}
               </PopupFormGroup>
             </PopupFormBox>
           </PopupContent>

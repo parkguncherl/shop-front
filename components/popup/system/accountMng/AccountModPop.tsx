@@ -53,7 +53,6 @@ export const AccountModPop = ({ data, open, onClose }: AccountModPopProps) => {
       belongNm: data.belongNm,
       deptNm: data.deptNm || '',
       positionNm: data.positionNm || '',
-      //orgPartnerId: data.orgPartnerId ?? 0,
     },
     mode: 'onSubmit',
   });

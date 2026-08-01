@@ -17,6 +17,7 @@ type PartnerRequestUpdateExtended = PartnerRequestUpdate & {
   sizeInfo?: string;
   aiStudyText?: string;
   aiStudyProdDetailText?: string;
+  partnerImage?: string;
 };
 
 import { authApi } from '@/libs';
@@ -102,6 +103,7 @@ const PartnerModPop = ({ datas }: Props) => {
         email: body.email,
         reviewPointRate: body.reviewPointRate,
         sizeInfo: body.sizeInfo ?? '',
+        partnerImage: body.partnerImage ?? '',
         aiStudyText: body.aiStudyText ?? '',
         aiStudyProdDetailText: body.aiStudyProdDetailText ?? '',
         creUser: body.creUser,
@@ -243,6 +245,15 @@ const PartnerModPop = ({ datas }: Props) => {
               name={'reviewPointRate'}
               label={'리뷰포인트 적립률'}
               placeholder={Placeholder.Input || ''}
+              required={false}
+            />
+          </PopupSearchType>
+          <PopupSearchType className={'type_2'}>
+            <FormInput<PartnerRequestUpdateExtended>
+              control={control}
+              name={'partnerImage'}
+              label={'파트너 이미지(폴더명)'}
+              placeholder={'파일 저장소 폴더 프리픽스 (예: mapsiggun)'}
               required={false}
             />
           </PopupSearchType>

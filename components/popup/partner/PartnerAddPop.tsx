@@ -11,7 +11,7 @@ import { Placeholder } from '@/libs/const';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { CommonResponseFileDown, PartnerRequestCreate, PartnerResponsePaging } from '@/generated';
 
-type PartnerRequestCreateExtended = PartnerRequestCreate & { reviewPointRate?: number; sizeInfo?: string };
+type PartnerRequestCreateExtended = PartnerRequestCreate & { reviewPointRate?: number; sizeInfo?: string; partnerImage?: string };
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toastError, toastSuccess } from '@/components/ToastMessage';
@@ -174,6 +174,15 @@ const PartnerAddPop = ({ data }: Props) => {
               name={'reviewPointRate'}
               label={'리뷰포인트 적립률'}
               placeholder={Placeholder.Input || ''}
+              required={false}
+            />
+          </PopupSearchType>
+          <PopupSearchType className={'type_2'}>
+            <FormInput<PartnerRequestCreateExtended>
+              control={control}
+              name={'partnerImage'}
+              label={'파트너 이미지(폴더명)'}
+              placeholder={'파일 저장소 폴더 프리픽스 (예: mapsiggun)'}
               required={false}
             />
           </PopupSearchType>
