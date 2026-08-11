@@ -11,7 +11,17 @@ import { Placeholder } from '@/libs/const';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { CommonResponseFileDown, PartnerRequestCreate, PartnerResponsePaging } from '@/generated';
 
-type PartnerRequestCreateExtended = PartnerRequestCreate & { reviewPointRate?: number; sizeInfo?: string; partnerImage?: string };
+type PartnerRequestCreateExtended = PartnerRequestCreate & {
+  reviewPointRate?: number;
+  sizeInfo?: string;
+  partnerImage?: string;
+  location?: string;
+  etcInfo?: string;
+  subDomain?: string;
+  kakaoStoryId?: string;
+  kakaoId?: string;
+  instaId?: string;
+};
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toastError, toastSuccess } from '@/components/ToastMessage';
@@ -136,8 +146,14 @@ const PartnerAddPop = ({ data }: Props) => {
             />
           </PopupSearchType>
           <PopupSearchType className={'type_2'}>
-            <FormInput<PartnerRequestCreate> control={control} name={'domain'} label={'도메인'} placeholder={Placeholder.Input || ''} required={true} />
-            <FormInput<PartnerRequestCreate> control={control} name={'partnerSubNm'} label={'도메인명'} placeholder={Placeholder.Input || ''} required={true} />
+            <FormInput<PartnerRequestCreateExtended>
+              control={control}
+              name={'location'}
+              label={'위치'}
+              placeholder={Placeholder.Input || ''}
+              required={false}
+            />
+            <FormInput<PartnerRequestCreateExtended> control={control} name={'subDomain'} label={'서브도메인'} placeholder={Placeholder.Input || ''} required={false} />
           </PopupSearchType>
           <PopupSearchType className={'type_2'}>
             <FormInput<PartnerRequestCreate>
@@ -185,6 +201,39 @@ const PartnerAddPop = ({ data }: Props) => {
               placeholder={'파일 저장소 폴더 프리픽스 (예: mapsiggun)'}
               required={false}
             />
+            <FormInput<PartnerRequestCreateExtended>
+              control={control}
+              name={'etcInfo'}
+              label={'기타정보'}
+              placeholder={Placeholder.Input || ''}
+              required={false}
+            />
+          </PopupSearchType>
+          <PopupSearchType className={'type_2'}>
+            <FormInput<PartnerRequestCreateExtended>
+              control={control}
+              name={'kakaoStoryId'}
+              label={'카카오 스토리 ID'}
+              placeholder={Placeholder.Input || ''}
+              required={false}
+            />
+            <FormInput<PartnerRequestCreateExtended>
+              control={control}
+              name={'kakaoId'}
+              label={'카카오 ID'}
+              placeholder={Placeholder.Input || ''}
+              required={false}
+            />
+          </PopupSearchType>
+          <PopupSearchType className={'type_2'}>
+            <FormInput<PartnerRequestCreateExtended>
+              control={control}
+              name={'instaId'}
+              label={'인스타 ID'}
+              placeholder={Placeholder.Input || ''}
+              required={false}
+            />
+            <FormInput<PartnerRequestCreate> control={control} name={'partnerSubNm'} label={'도메인명'} placeholder={'화주 웹사이트'} required={true} />
           </PopupSearchType>
         </PopupSearchBox>
       </PopupContent>

@@ -18,6 +18,12 @@ type PartnerRequestUpdateExtended = PartnerRequestUpdate & {
   aiStudyText?: string;
   aiStudyProdDetailText?: string;
   partnerImage?: string;
+  location?: string;
+  etcInfo?: string;
+  subDomain?: string;
+  kakaoStoryId?: string;
+  kakaoId?: string;
+  instaId?: string;
 };
 
 import { authApi } from '@/libs';
@@ -97,13 +103,18 @@ const PartnerModPop = ({ datas }: Props) => {
         partnerSubNm: body.partnerSubNm,
         partnerTicker: body.partnerTicker,
         phoneNo: (body.phoneNo || '').replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, '$1-$2-$3'),
-        domain: body.domain,
+        location: body.location ?? '',
         partnerType: body.partnerType,
         repNm: body.repNm,
         email: body.email,
         reviewPointRate: body.reviewPointRate,
         sizeInfo: body.sizeInfo ?? '',
         partnerImage: body.partnerImage ?? '',
+        etcInfo: body.etcInfo ?? '',
+        subDomain: body.subDomain ?? '',
+        kakaoStoryId: body.kakaoStoryId ?? '',
+        kakaoId: body.kakaoId ?? '',
+        instaId: body.instaId ?? '',
         aiStudyText: body.aiStudyText ?? '',
         aiStudyProdDetailText: body.aiStudyProdDetailText ?? '',
         creUser: body.creUser,
@@ -207,8 +218,8 @@ const PartnerModPop = ({ datas }: Props) => {
             />
           </PopupSearchType>
           <PopupSearchType className={'type_2'}>
-            <FormInput<PartnerRequestUpdate> control={control} name={'domain'} label={'도메인'} placeholder={Placeholder.Input || ''} required={true} />
-            <FormInput<PartnerRequestUpdate> control={control} name={'partnerSubNm'} label={'도메인명'} placeholder={Placeholder.Input || ''} required={true} />
+            <FormInput<PartnerRequestUpdateExtended> control={control} name={'location'} label={'위치'} placeholder={Placeholder.Input || ''} required={false} />
+            <FormInput<PartnerRequestUpdateExtended> control={control} name={'subDomain'} label={'서브도메인'} placeholder={Placeholder.Input || ''} required={false} />
           </PopupSearchType>
           <PopupSearchType className={'type_2'}>
             <FormInput<PartnerRequestUpdate>
@@ -256,6 +267,15 @@ const PartnerModPop = ({ datas }: Props) => {
               placeholder={'파일 저장소 폴더 프리픽스 (예: mapsiggun)'}
               required={false}
             />
+            <FormInput<PartnerRequestUpdateExtended> control={control} name={'etcInfo'} label={'기타정보'} placeholder={Placeholder.Input || ''} required={false} />
+          </PopupSearchType>
+          <PopupSearchType className={'type_2'}>
+            <FormInput<PartnerRequestUpdateExtended> control={control} name={'kakaoStoryId'} label={'카카오 스토리 ID'} placeholder={Placeholder.Input || ''} required={false} />
+            <FormInput<PartnerRequestUpdateExtended> control={control} name={'kakaoId'} label={'카카오 ID'} placeholder={Placeholder.Input || ''} required={false} />
+          </PopupSearchType>
+          <PopupSearchType className={'type_2'}>
+            <FormInput<PartnerRequestUpdateExtended> control={control} name={'instaId'} label={'인스타 ID'} placeholder={Placeholder.Input || ''} required={false} />
+            <FormInput<PartnerRequestUpdate> control={control} name={'partnerSubNm'} label={'도메인명'} placeholder={Placeholder.Input || ''} required={true} />
           </PopupSearchType>
           <PopupSearchType className={'type_1'}>
             <dl>

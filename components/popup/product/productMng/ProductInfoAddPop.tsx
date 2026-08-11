@@ -6,7 +6,8 @@ import PopupFormBox from '@/components/popup/content/PopupFormBox';
 import PopupFormGroup from '@/components/popup/content/PopupFormGroup';
 import PopupFormType from '@/components/popup/content/PopupFormType';
 import FormInput from '@/components/form/FormInput';
-import { Controller, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitErrorHandler, SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import { useCode } from '@/hooks/useCode';
 import { TunedReactSelector } from '@/components/TunedReactSelector';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -25,6 +26,10 @@ import { PARTNER_CODE } from '@/libs/const';
 /** form 영역 입력 인터페이스 */
 export interface ProductCreateFields extends ProductMngRequestInsertProduct {
   weather: ('spring' | 'summer' | 'autumn' | 'winter')[];
+  /** 대분류(90010) 선택값 - 소분류 필터용(저장 대상 아님) */
+  majorCd?: string;
+  /** 소분류(90011) 선택값 = prod_type_code */
+  prodTypeCode?: string;
 }
 
 export interface ProductInfoCreateFields {
@@ -101,6 +106,7 @@ const ProductInfoAddPop = ({ open, onClose, onSuccess, productInfo, sizeInfo }: 
     control,
     reset,
     clearErrors,
+    setValue,
     //formState: { errors, isValid },
   } = useForm<ProductInfoCreateFields>({
     // resolver: yupResolver(YupSchema.InsertProductInfoRequest(productInfo?.id)), todo
@@ -108,6 +114,23 @@ const ProductInfoAddPop = ({ open, onClose, onSuccess, productInfo, sizeInfo }: 
     mode: 'onChange',
     defaultValues: buildDefaultValues(),
   });
+
+  /** 대분류(90010) / 소분류(90011) 공통코드 - 소분류는 선택한 대분류 코드로 시작하는 항목만 노출 */
+  const { data: majorCodes } = useCode('90010');
+  const { data: minorCodes } = useCode('90011');
+  const majorCd = useWatch({ control, name: 'product.majorCd' });
+  const prodTypeCode = useWatch({ control, name: 'product.prodTypeCode' });
+  const majorOptions = (majorCodes ?? []).map((c: any, i: number) => ({ key: i, value: c.codeCd, label: c.codeNm }));
+  const minorOptions = (minorCodes ?? [])
+    .filter((c: any) => !majorCd || String(c.codeCd).startsWith(String(majorCd)))
+    .map((c: any, i: number) => ({ key: i, value: c.codeCd, label: c.codeNm }));
+
+  /** 대분류 변경 시 소분류 선택값이 더 이상 하위가 아니면 초기화 */
+  useEffect(() => {
+    if (prodTypeCode && majorCd && !String(prodTypeCode).startsWith(String(majorCd))) {
+      setValue('product.prodTypeCode', undefined);
+    }
+  }, [majorCd]);
 
   /** 품목컨텐츠 추가 요청 처리 동작 캐싱 */
   const { mutate: insertProductInfoMutate } = useMutation({
@@ -319,6 +342,23 @@ const ProductInfoAddPop = ({ open, onClose, onSuccess, productInfo, sizeInfo }: 
                         onChangeMulti={(vals) => field.onChange(vals.map((v) => Number(v)))}
                       />
                     )}
+                  />
+                </PopupFormType>
+                {/* 대분류(90010) / 소분류(90011) — 소분류 = prod_type_code */}
+                <PopupFormType className={'type2'}>
+                  <FormDropDown<ProductInfoCreateFields>
+                    control={control}
+                    name={'product.majorCd'}
+                    title={'대분류'}
+                    options={majorOptions}
+                    placeholder={'대분류 선택'}
+                  />
+                  <FormDropDown<ProductInfoCreateFields>
+                    control={control}
+                    name={'product.prodTypeCode'}
+                    title={'소분류'}
+                    options={minorOptions}
+                    placeholder={majorCd ? '소분류 선택' : '대분류 먼저 선택'}
                   />
                 </PopupFormType>
                 {/* 신상번호 + 등록일자 — 두 칸(type2) 배치 */}
