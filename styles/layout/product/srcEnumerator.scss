@@ -18,6 +18,8 @@
     display: flex;
     flex-direction: column;
     .header {
+      // 다크 테마 전역 `.header { background: var(--dark-surface) !important }` 로 제목 줄만 밝아지는 현상 제거
+      background-color: transparent !important;
       .gridBoxInfo {
         padding: 0 5px 0 5px;
         div {
