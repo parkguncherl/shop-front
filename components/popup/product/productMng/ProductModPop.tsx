@@ -32,6 +32,8 @@ export interface ProductModFields extends ProductMngRequestUpdateProduct {
   majorCd?: string;
   /** 소분류(90011) 선택값 = prod_type_code */
   prodTypeCode?: string;
+  /** 세탁 기타 설명 (세탁 타입이 기타(90070/9) 인 경우 필수) */
+  laundryDesc?: string;
 }
 
 interface ProductContentShowPopProps {
@@ -89,6 +91,8 @@ const ProductModPop = ({ open, onClose, onSuccess, productInfo }: ProductContent
   const { data: minorCodes } = useCode('90011');
   const majorCd = useWatch({ control, name: 'majorCd' });
   const prodTypeCode = useWatch({ control, name: 'prodTypeCode' });
+  /** 세탁 타입이 기타(90070 / code_cd = 9) 인 경우에만 세탁 기타 설명 필수 노출 */
+  const laundryTp = useWatch({ control, name: 'laundryTp' });
   const majorOptions = (majorCodes ?? []).map((c: any, i: number) => ({ key: i, value: c.codeCd, label: c.codeNm }));
   const minorOptions = (minorCodes ?? [])
     .filter((c: any) => !majorCd || String(c.codeCd).startsWith(String(majorCd)))
@@ -354,6 +358,25 @@ const ProductModPop = ({ open, onClose, onSuccess, productInfo }: ProductContent
               </PopupFormType>
               <PopupFormType className={'type_1'}>
                 <FormInput<ProductModFields> control={control} name={'detInfo'} label={'상품설명'} inputType={'textarea'} style={{ height: 120 }} />
+              </PopupFormType>
+              {/* 원단 정보(두께/신축성/비침/안감/세탁) — 모두 필수 코드 선택 */}
+              <PopupFormType className={'type2'}>
+                <FormDropDown<ProductModFields> control={control} name={'thickTp'} title={'두께'} codeUpper={'90030'} placeholder={'선택'} required />
+                <FormDropDown<ProductModFields> control={control} name={'spanTp'} title={'신축성'} codeUpper={'90040'} placeholder={'선택'} required />
+              </PopupFormType>
+              <PopupFormType className={'type2'}>
+                <FormDropDown<ProductModFields> control={control} name={'showTp'} title={'비침'} codeUpper={'90050'} placeholder={'선택'} required />
+                <FormDropDown<ProductModFields> control={control} name={'transTp'} title={'안감'} codeUpper={'90060'} placeholder={'선택'} required />
+              </PopupFormType>
+              <PopupFormType className={'type2'}>
+                <FormDropDown<ProductModFields> control={control} name={'laundryTp'} title={'세탁'} codeUpper={'90070'} placeholder={'선택'} required />
+                <FormInput<ProductModFields>
+                  control={control}
+                  name={'laundryDesc'}
+                  label={'세탁방법설명'}
+                  placeholder={'세탁방법설명 입력'}
+                  required={laundryTp === '9'}
+                />
               </PopupFormType>
             </PopupFormGroup>
           </PopupFormBox>
