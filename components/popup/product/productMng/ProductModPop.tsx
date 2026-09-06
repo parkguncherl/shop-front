@@ -73,6 +73,8 @@ const ProductModPop = ({ open, onClose, onSuccess, productInfo }: ProductContent
   /** 팝업 내부 local state */
   const [openModConf, setOpenAddConf] = useState<{ open: boolean; stored?: ProductMngRequestUpdateProduct }>({ open: false });
   const [openDelConf, setOpenDelConf] = useState(false);
+  /** 대분류 code_desc 가 'etc' 인 경우 옷감정보(두께/신축성/비침/안감/세탁)를 옵셔널로 처리 */
+  const [isFabricOptional, setIsFabricOptional] = useState(false);
 
   /** 품목 내용 입력 서식 */
   const {
@@ -82,7 +84,7 @@ const ProductModPop = ({ open, onClose, onSuccess, productInfo }: ProductContent
     reset,
     //formState: { errors, isValid },
   } = useForm<ProductModFields>({
-    resolver: yupResolver(YupSchema.UpdateProductRequest()),
+    resolver: yupResolver(YupSchema.UpdateProductRequest(isFabricOptional)),
     mode: 'onChange',
   });
 
@@ -93,6 +95,12 @@ const ProductModPop = ({ open, onClose, onSuccess, productInfo }: ProductContent
   const prodTypeCode = useWatch({ control, name: 'prodTypeCode' });
   /** 세탁 타입이 기타(90070 / code_cd = 9) 인 경우에만 세탁 기타 설명 필수 노출 */
   const laundryTp = useWatch({ control, name: 'laundryTp' });
+
+  /** 선택된 대분류의 code_desc 가 'etc' 이면 옷감정보 옵셔널 */
+  useEffect(() => {
+    const m = (majorCodes as any[] | undefined)?.find((c) => String(c.codeCd) === String(majorCd));
+    setIsFabricOptional(!!m && String(m.codeDesc ?? '').toLowerCase() === 'etc');
+  }, [majorCd, majorCodes]);
   const majorOptions = (majorCodes ?? []).map((c: any, i: number) => ({ key: i, value: c.codeCd, label: c.codeNm }));
   const minorOptions = (minorCodes ?? [])
     .filter((c: any) => !majorCd || String(c.codeCd).startsWith(String(majorCd)))
@@ -361,21 +369,21 @@ const ProductModPop = ({ open, onClose, onSuccess, productInfo }: ProductContent
               </PopupFormType>
               {/* 원단 정보(두께/신축성/비침/안감/세탁) — 모두 필수 코드 선택 */}
               <PopupFormType className={'type2'}>
-                <FormDropDown<ProductModFields> control={control} name={'thickTp'} title={'두께'} codeUpper={'90030'} placeholder={'선택'} required />
-                <FormDropDown<ProductModFields> control={control} name={'spanTp'} title={'신축성'} codeUpper={'90040'} placeholder={'선택'} required />
+                <FormDropDown<ProductModFields> control={control} name={'thickTp'} title={'두께'} codeUpper={'90030'} placeholder={'선택'} required={!isFabricOptional} />
+                <FormDropDown<ProductModFields> control={control} name={'spanTp'} title={'신축성'} codeUpper={'90040'} placeholder={'선택'} required={!isFabricOptional} />
               </PopupFormType>
               <PopupFormType className={'type2'}>
-                <FormDropDown<ProductModFields> control={control} name={'showTp'} title={'비침'} codeUpper={'90050'} placeholder={'선택'} required />
-                <FormDropDown<ProductModFields> control={control} name={'transTp'} title={'안감'} codeUpper={'90060'} placeholder={'선택'} required />
+                <FormDropDown<ProductModFields> control={control} name={'showTp'} title={'비침'} codeUpper={'90050'} placeholder={'선택'} required={!isFabricOptional} />
+                <FormDropDown<ProductModFields> control={control} name={'transTp'} title={'안감'} codeUpper={'90060'} placeholder={'선택'} required={!isFabricOptional} />
               </PopupFormType>
               <PopupFormType className={'type2'}>
-                <FormDropDown<ProductModFields> control={control} name={'laundryTp'} title={'세탁'} codeUpper={'90070'} placeholder={'선택'} required />
+                <FormDropDown<ProductModFields> control={control} name={'laundryTp'} title={'세탁'} codeUpper={'90070'} placeholder={'선택'} required={!isFabricOptional} />
                 <FormInput<ProductModFields>
                   control={control}
                   name={'laundryDesc'}
                   label={'세탁방법설명'}
                   placeholder={'세탁방법설명 입력'}
-                  required={laundryTp === '9'}
+                  required={!isFabricOptional && laundryTp === '9'}
                 />
               </PopupFormType>
             </PopupFormGroup>

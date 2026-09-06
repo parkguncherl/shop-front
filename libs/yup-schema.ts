@@ -214,7 +214,8 @@ export const YupSchema = {
     }) as yup.ObjectSchema<ProductContentFields>,
 
   //InsertProductInfoRequest: (productId?: number): yup.ObjectSchema<ProductInfoCreateFields> =>
-  InsertProductInfoRequest: (): yup.ObjectSchema<ProductInfoCreateFields> =>
+  // fabricOptional=true 이면 옷감정보(두께/신축성/비침/안감/세탁/세탁방법)를 옵셔널로 처리 (대분류 code_desc='etc' 인 경우)
+  InsertProductInfoRequest: (fabricOptional = false): yup.ObjectSchema<ProductInfoCreateFields> =>
     yup.object({
       // todo 마이그레이션 이후 이하가 무의미하다 여길 시 삭제
       // product: yup.lazy(() => {
@@ -252,16 +253,18 @@ export const YupSchema = {
         sellAmt: yup.number().typeError('판매가는 숫자만 입력 가능합니다.').notRequired(),
         discountRate: yup.number().typeError('할인율은 숫자만 입력 가능합니다.').notRequired(),
         weather: yup.array().of(yup.string()).min(1, '최소 하나의 계절 유형을 선택하십시요.').required('계절 유형은 필수값입니다!'),
-        thickTp: yup.string().required('두께는 필수값입니다!'),
-        spanTp: yup.string().required('신축성은 필수값입니다!'),
-        showTp: yup.string().required('비침은 필수값입니다!'),
-        transTp: yup.string().required('안감은 필수값입니다!'),
-        laundryTp: yup.string().required('세탁은 필수값입니다!'),
-        laundryDesc: yup.string().when('laundryTp', {
-          is: '9',
-          then: (s) => s.required('세탁 기타 설명은 필수값입니다!'),
-          otherwise: (s) => s.notRequired(),
-        }),
+        thickTp: fabricOptional ? yup.string().notRequired() : yup.string().required('두께는 필수값입니다!'),
+        spanTp: fabricOptional ? yup.string().notRequired() : yup.string().required('신축성은 필수값입니다!'),
+        showTp: fabricOptional ? yup.string().notRequired() : yup.string().required('비침은 필수값입니다!'),
+        transTp: fabricOptional ? yup.string().notRequired() : yup.string().required('안감은 필수값입니다!'),
+        laundryTp: fabricOptional ? yup.string().notRequired() : yup.string().required('세탁은 필수값입니다!'),
+        laundryDesc: fabricOptional
+          ? yup.string().notRequired()
+          : yup.string().when('laundryTp', {
+              is: '9',
+              then: (s) => s.required('세탁 기타 설명은 필수값입니다!'),
+              otherwise: (s) => s.notRequired(),
+            }),
         detInfo: yup.string().notRequired(),
         showYn: yup.string().notRequired(),
       }),
@@ -280,7 +283,8 @@ export const YupSchema = {
         .required('상품상세 정보는 필수값입니다!'),
     }) as yup.ObjectSchema<ProductInfoCreateFields>,
 
-  UpdateProductRequest: (): yup.ObjectSchema<ProductModFields> =>
+  // fabricOptional=true 이면 옷감정보(두께/신축성/비침/안감/세탁/세탁방법)를 옵셔널로 처리 (대분류 code_desc='etc' 인 경우)
+  UpdateProductRequest: (fabricOptional = false): yup.ObjectSchema<ProductModFields> =>
     yup.object({
       prodNm: yup.string().required('상품명은 필수값입니다!'),
       composition: yup.string().required('혼용율은 필수값입니다!'),
@@ -298,16 +302,18 @@ export const YupSchema = {
       // isSummer: yup.string().notRequired(),
       // isAutumn: yup.string().notRequired(),
       // isWinter: yup.string().notRequired(),
-      thickTp: yup.string().required('두께는 필수값입니다!'),
-      spanTp: yup.string().required('신축성은 필수값입니다!'),
-      showTp: yup.string().required('비침은 필수값입니다!'),
-      transTp: yup.string().required('안감은 필수값입니다!'),
-      laundryTp: yup.string().required('세탁은 필수값입니다!'),
-      laundryDesc: yup.string().when('laundryTp', {
-        is: '9',
-        then: (s) => s.required('세탁 기타 설명은 필수값입니다!'),
-        otherwise: (s) => s.notRequired(),
-      }),
+      thickTp: fabricOptional ? yup.string().notRequired() : yup.string().required('두께는 필수값입니다!'),
+      spanTp: fabricOptional ? yup.string().notRequired() : yup.string().required('신축성은 필수값입니다!'),
+      showTp: fabricOptional ? yup.string().notRequired() : yup.string().required('비침은 필수값입니다!'),
+      transTp: fabricOptional ? yup.string().notRequired() : yup.string().required('안감은 필수값입니다!'),
+      laundryTp: fabricOptional ? yup.string().notRequired() : yup.string().required('세탁은 필수값입니다!'),
+      laundryDesc: fabricOptional
+        ? yup.string().notRequired()
+        : yup.string().when('laundryTp', {
+            is: '9',
+            then: (s) => s.required('세탁 기타 설명은 필수값입니다!'),
+            otherwise: (s) => s.notRequired(),
+          }),
       detInfo: yup.string().notRequired(),
       showYn: yup.string().notRequired(),
       categoryIds: yup.array().of(yup.number().required()).notRequired(),
